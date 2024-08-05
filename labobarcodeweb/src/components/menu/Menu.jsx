@@ -1,31 +1,24 @@
 import React, { useState } from 'react';
-import styles from './Menu.module.css';
+import { FaBars, FaTimes } from 'react-icons/fa'
+import './Menu.css'
 
 const Menu = ({menuData}) => {
-  const [open, setOpen] = useState(false);
+    const [click, setClick] = useState(false)
 
-  const toggleMenu = () => {
-    setOpen(!open);
-  };
-
-  return (
-    <div>
-      <div className={styles.menuToggle} onClick={toggleMenu}>
-        Menu
-      </div>
-      <ul className={`${styles.menu} ${open ? styles.open : ''}`}>
-        {
-            () => {
-                menuData.map(i=> <li className={styles.menuItem} >i.name</li>)
+    const handleClick = () => setClick(!click)
+    return (
+        <div className='navbar'>
+            <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+            {
+              menuData.map(i=> (<li key={i.id} className='nav-item'><a href={i.href}></a>{i.name}</li>))
             }
-        }
-        
-        <li className={styles.menuItem}>About</li>
-        <li className={styles.menuItem}>Services</li>
-        <li className={styles.menuItem}>Contact</li>
-      </ul>
-    </div>
-  );
-};
+            </ul>
+            <div className='hamburger' onClick={handleClick}>
+                {click ? (<FaTimes size={30} style={{ color: '#f8f8f8' }} />) : (<FaBars size={30} style={{ color: '#f8f8f8' }} />)}
 
-export default Menu;
+            </div>
+        </div>
+    )
+}
+
+export default Menu
