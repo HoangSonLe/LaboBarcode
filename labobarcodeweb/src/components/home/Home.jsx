@@ -1,11 +1,7 @@
-import Layout from "../layout/Layout"
-
-const Home = () =>{
-    return <Layout>
-        <div>
-            noij dung
-        </div>
-    </Layout>
-}
+import clsx from "clsx";
+import styles from "./Home.module.css";
+const Home = () => {
+    return <div className={clsx(styles.container)}>Home</div>;
+};
 
 export default Home;

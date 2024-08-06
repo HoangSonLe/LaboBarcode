@@ -2,10 +2,11 @@
     width: 100%;
     height: 100px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding:1rem;
+    padding: 1rem;
     background-color: var(--darkgrey);
+    flex: 1;
 }
 
 .navbar img {
@@ -26,21 +27,25 @@
 }
 
 @media screen and (max-width: 940px) {
+    .navbar {
+        justify-content: flex-end;
+    }
     .nav-menu {
         position: fixed;
-        left: -100%;
-        top: 100px;
+        right: -110%;
+        top: -5%;
         flex-direction: column;
         justify-content: center;
-        background-color: var(--darkgrey);
-        width:100%;
-        height: 100%;
+        background-color: white;
+        width: 101%;
+        height: -webkit-fill-available;
         text-align: center;
         transition: 0.4s;
+        z-index: 1000;
     }
 
     .nav-menu.active {
-        left: 0;
+        right: 0;
     }
 
     .nav-item {
@@ -51,5 +56,9 @@
 
     .hamburger {
         display: flex;
+    }
+    .hamburger svg{
+        color: rgb(0, 0, 0) !important;
+        z-index: 1000;
     }
 }

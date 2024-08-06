@@ -1,40 +1,93 @@
-.container{
+.footer{
     width: 100%;
-    height: 100%;
+    height: fit-content;
+    box-shadow: 0px -2px 5px #00000029;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+.container {
+    width: 65%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
-.mapContainer{
+.mapContainer {
+    max-width: 20rem;
+    width: 100%;
+    height: 12rem;
+    padding: 0.65rem 0;
+    box-sizing: border-box;
 }
-.bannerLogo{
-    flex: 1;
+.bannerLogo {
+    height: 12rem;
+    
 }
-.contactContainer{
+.bannerLogo img {
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+}
+.contactContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-.contactItem{
+    padding: 1rem 1rem;
+    box-sizing: border-box;
 
 }
-.contactIcon{
-    width: 5rem;
-    height: 5rem;
-    background-color: yellow;
-}
-.contactContent{
+.contactItem {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    width: 15rem;
 }
-.contactContentHeader{
+.contactIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #89c5ca;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+.contactContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0.3rem 0.5rem;
+    flex: 1;
+}
+.contactContentHeader {
     font-weight: bold;
 }
-.contactContentInfor{
+.contactContentInfor {
     font-style: italic;
     text-decoration: underline;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+.contactContentInfor img {
+    padding: 0 0.4rem;
+}
+.contactContentInfor a {
+    color: black;
+}
+
+@media screen and (max-width: 769px) {
+    .container {
+        flex-wrap: wrap;
+    }
+    .mapContainer{
+        max-width: unset;
+    }
 }
