@@ -1,0 +1,155 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.cardContainer {
+    background: #e7f2f4 0% 0% no-repeat padding-box;
+    color: #148f96;
+    /* border: 1px solid #89C5CA; */
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem 0;
+    width: 100%;
+}
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1rem;
+}
+
+.formTitle {
+    color: #156673;
+    font-weight: 400;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.5rem;
+    width: 80%;
+}
+.textFieldForm {
+    margin: 1rem 0 !important;
+    width: 20rem;
+}
+.buttonForm {
+    background: #148f96 0% 0% no-repeat padding-box !important;
+}
+
+.tableCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.tableCard table {
+    border-collapse: separate; /* Use separate borders for cells */
+    border-spacing: 0;
+    border: 1px solid #cecfcf;
+    color: black;
+    min-width: 25rem;
+    border-radius: 10px;
+}
+.tableCard table th,
+.tableCard table td {
+    border: 1px solid #cecfcf;
+    padding: 1rem;
+}
+.tableCard table tr th:first-child {
+    color: white;
+    background: #178091 0% 0% no-repeat padding-box;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    border: 1px solid #178091;
+}
+.tableCard table tr:first-child td {
+    font-weight: bold;
+    color: white;
+    background: #178091 0% 0% no-repeat padding-box;
+    text-align: center;
+}
+.tableCard table tr:first-child td {
+    border-top: 1px solid #178091;
+    border-left: 1px solid #178091;
+}
+.tableCard table tr td {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+.tableCard table tr td:first-child {
+    border-left: none;
+    border-right: none;
+}
+.tableCard table tr td:first-child {
+    font-weight: bold;
+}
+.tableCard th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.tableCard th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.tableCard tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.tableCard tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+.subContentContainer {
+    background: #ffffff 0% 0% no-repeat padding-box;
+    box-shadow: 0px 2px 5px #00000029;
+    opacity: 1;
+    padding: 1rem;
+    margin: 2rem 2rem;
+    border-radius: 10px;
+    max-width: 65%;
+}
+.subtitle{
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0D5D70;
+    text-decoration: underline;
+}
+.subContent{
+    font-size: 1rem;
+    color: black;
+    line-height: 1.5rem;
+    padding: 1rem 2rem;
+}
+.subContentTable{
+    padding: 0 2rem;
+}
+.subContentTable table th,
+.subContentTable table td {
+    padding: 1rem;
+    text-align: left;
+}
+.subContentTable table th{
+    font-weight:bold ;
+    color: #0D5D70;
+}
+.subContentTable table td{
+    color: #d11752;
+    font-weight: 400;
+}
+@media screen and (max-width: 769px) {
+    .tableCard {
+        min-width: none;
+    }
+    .subContentContainer{
+        max-width: unset;
+    }
+    .subContentTable{
+        padding: 0;
+    }
+}

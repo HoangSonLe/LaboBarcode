@@ -7,6 +7,9 @@
     background: transparent linear-gradient(90deg, #5fc4cb 0%, #78a4a7 100%) 0% 0% no-repeat
         padding-box;
     box-shadow: 0px 2px 5px #00000029;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .nav li {
@@ -44,7 +47,6 @@
     flex: 1 1;
     display: flex;
     justify-content: flex-end;
-    padding: 2rem;
 }
 .center {
     flex: 2;
@@ -63,7 +65,10 @@
     color: #fff;
     align-items: center;
 }
-@media screen and (max-width: 940px) {
+@media screen and (max-width: 769px) {
+    .nav {
+        position: unset;
+    }
     .navMenu {
         display: flex;
         flex-direction: column;

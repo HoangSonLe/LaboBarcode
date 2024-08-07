@@ -8,7 +8,7 @@ const Menu = ({ menuData }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     console.log(searchParams);
     const handleClick = () => setClick(!click);
-
+    return null;
     return (
         <div className="navbar">
             <ul className={click ? "nav-menu active" : "nav-menu"}>

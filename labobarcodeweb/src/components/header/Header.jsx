@@ -28,7 +28,7 @@ const Header = () => {
         {
             id: 5,
             name: "Warranty",
-            href: "/Warranty",
+            href: "/",
         },
         {
             id: 6,
