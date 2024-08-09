@@ -6,13 +6,14 @@ import Layout from "./components/layout/Layout";
 import Contact from "./components/contact/Contact";
 import ErrorPage from "./components/errorpage/ErrorPage";
 import Warranty from "./components/warranty/Warranty";
+import WarrantyManagement from "./components/warrantymanagement/WarrantyManagement";
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Warranty />} />
-                    {/* <Route path="about" element={<About />} /> */}
+                    <Route path="/quanlythebaohanh" element={<WarrantyManagement />} />
                     {/* <Route path="contact" element={<Contact />} /> */}
                     <Route path="*" element={<ErrorPage />} />
                 </Route>

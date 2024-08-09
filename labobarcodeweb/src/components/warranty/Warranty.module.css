@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    padding: 2rem 2rem;
 }
 .cardContainer {
     background: #e7f2f4 0% 0% no-repeat padding-box;
