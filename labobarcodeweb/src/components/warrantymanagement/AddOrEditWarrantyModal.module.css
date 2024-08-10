@@ -1,0 +1,8 @@
+.containerFlex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.customModal {
+    max-width: 80% !important;
+}
