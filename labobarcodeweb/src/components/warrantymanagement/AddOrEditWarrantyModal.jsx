@@ -25,13 +25,11 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
         queryKey: ["warranty", id],
         queryFn: () => ({
             data: {
-                data: {
-                    patientName: "Test",
-                    patientPhoneNumber: "09087654323",
-                },
+                patientName: "Test",
+                patientPhoneNumber: "09087654323",
             },
         }), //getWarranty(id),
-        enabled: !!id,
+        // enabled: !!id,
         staleTime: 1000 * 10,
     });
 
@@ -44,9 +42,10 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
 
     useEffect(() => {
         if (warrantyQuery.data) {
+            console.log(warrantyQuery.data.data);
             setFormData(warrantyQuery.data.data);
         }
-    }, [id]);
+    }, [warrantyQuery.data]);
 
     const handleInputChange = (name) => (event) => {
         setFormData((prev) => ({ ...prev, [name]: event.target.value }));
