@@ -143,8 +143,9 @@ export default function WarrantyTable({ tableData }) {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [modalProps, setModalProps] = React.useState(null);
+    const modalRef = React.useRef();
 
-    const childRef = React.useRef();
     const queryClient = useQueryClient();
 
     tableData = {
@@ -242,16 +243,26 @@ export default function WarrantyTable({ tableData }) {
         if (selected.length == 1) {
             id = selected[0].warrantyId;
         }
-        if (childRef.current) {
-            childRef.current.onOpenModal(id);
-        }
+        setModalProps({ id });
+        setTimeout(() => {
+            modalRef.current.onOpenModal();
+        }, 0); // Ensure modal is rendered before calling openModal
+    };
+    const handleCloseModal = () => {
+        setModalProps(null); // Unmount the modal after closing
     };
     let total = warrantysQuery.isLoading ? 0 : warrantysQuery.data.dataRows.length;
     return (
         <Box
             sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
         >
-            <AddOrEditWarrantyModal ref={childRef} />
+            {modalProps && (
+                <AddOrEditWarrantyModal
+                    ref={modalRef}
+                    id={modalProps.id}
+                    onClose={handleCloseModal}
+                />
+            )}
             <Paper sx={{ width: "90%" }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">

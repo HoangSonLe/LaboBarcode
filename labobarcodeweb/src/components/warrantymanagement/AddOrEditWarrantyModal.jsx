@@ -8,7 +8,8 @@ import { createWarranty, getWarranty, updateWarranty } from "../../apis/warranty
 import CustomizedModal from "../ui-kit/Modal/Modal";
 import FileUploadWithPreview from "../ui-kit/FileUpload/FileUploadWithPreview";
 import styles from "./AddOrEditWarrantyModal.module.css";
-const AddOrEditWarrantyModal = React.forwardRef(({ id }, ref) => {
+import moment from "moment";
+const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
     const [formData, setFormData] = useState({});
     const [selectedFiles, setSelectedFiles] = useState([]);
     const childRef = React.useRef();
@@ -24,9 +25,13 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id }, ref) => {
         queryKey: ["warranty", id],
         queryFn: () => ({
             data: {
-                data: {},
+                data: {
+                    patientName: "Test",
+                    patientPhoneNumber: "09087654323",
+                },
             },
         }), //getWarranty(id),
+        enabled: !!id,
         staleTime: 1000 * 10,
     });
 
@@ -41,7 +46,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id }, ref) => {
         if (warrantyQuery.data) {
             setFormData(warrantyQuery.data.data);
         }
-    }, [warrantyQuery.data]);
+    }, [id]);
 
     const handleInputChange = (name) => (event) => {
         setFormData((prev) => ({ ...prev, [name]: event.target.value }));
@@ -62,6 +67,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id }, ref) => {
             className={styles.customModal}
             title={id ? "Chỉnh sửa" : "Thêm mới"}
             onSave={handleSubmit}
+            onClose={onClose}
             ref={childRef}
         >
             <Grid container spacing={2}>
@@ -158,12 +164,15 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id }, ref) => {
                             },
                         }}
                     >
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
                             <DatePicker
                                 label="Ngày hết hạn"
                                 views={["year", "month", "day"]}
-                                value={formData.expirationDate}
-                                onChange={handleInputChange("expirationDate")}
+                                value={moment(formData.expirationDate)}
+                                onChange={(value) =>
+                                    setFormData((prev) => ({ ...prev, expirationDate: value }))
+                                }
+                                format="DD/MM/YYYY"
                                 renderInput={(params) => <TextField fullWidth {...params} />}
                             />
                         </LocalizationProvider>

@@ -22,7 +22,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const CustomizedModal = React.forwardRef(
-    ({ title, children, onSave, customRenderFooter, className }, ref) => {
+    ({ title, children, onSave,onClose, customRenderFooter, className }, ref) => {
         const [open, setOpen] = React.useState(false);
 
         const openModal = () => {
@@ -30,6 +30,7 @@ const CustomizedModal = React.forwardRef(
         };
         const closeModal = () => {
             setOpen(false);
+            onClose();
         };
         const handleSave = () => {
             onSave(() => setOpen(false));
