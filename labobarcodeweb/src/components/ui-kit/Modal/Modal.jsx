@@ -9,7 +9,10 @@ import IconButton from "@mui/material/IconButton";
 import * as React from "react";
 
 const CustomizedModal = React.forwardRef(
-    ({ title, children, onSave, onClose, customRenderFooter, styles = {} }, ref) => {
+    (
+        { title, children, onSave, onClose, customRenderFooter, styles = {}, isHasFooter = true },
+        ref
+    ) => {
         const [open, setOpen] = React.useState(false);
 
         const openModal = () => {
@@ -59,25 +62,32 @@ const CustomizedModal = React.forwardRef(
                     <CloseIcon fontSize="large" />
                 </IconButton>
                 <DialogContent dividers>{children}</DialogContent>
-                <DialogActions>
-                    {typeof customRenderFooter == "function" ? (
-                        customRenderFooter(closeModal)
-                    ) : (
-                        <Box display="flex" flex="1" alignItems="center" justifyContent="flex-end">
-                            <Button
-                                sx={{ marginRight: 2 }}
-                                variant="outlined"
-                                autoFocus
-                                onClick={closeModal}
+                {isHasFooter && (
+                    <DialogActions>
+                        {typeof customRenderFooter == "function" ? (
+                            customRenderFooter(closeModal)
+                        ) : (
+                            <Box
+                                display="flex"
+                                flex="1"
+                                alignItems="center"
+                                justifyContent="flex-end"
                             >
-                                Đóng
-                            </Button>
-                            <Button variant="contained" autoFocus onClick={handleSave}>
-                                Lưu
-                            </Button>
-                        </Box>
-                    )}
-                </DialogActions>
+                                <Button
+                                    sx={{ marginRight: 2 }}
+                                    variant="outlined"
+                                    autoFocus
+                                    onClick={closeModal}
+                                >
+                                    Đóng
+                                </Button>
+                                <Button variant="contained" autoFocus onClick={handleSave}>
+                                    Lưu
+                                </Button>
+                            </Box>
+                        )}
+                    </DialogActions>
+                )}
             </Dialog>
         );
     }

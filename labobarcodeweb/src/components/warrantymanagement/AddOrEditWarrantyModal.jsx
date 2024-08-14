@@ -15,9 +15,9 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
     const childRef = React.useRef();
 
     const onOpenModal = () => {
-        if (childRef.current) {
-            childRef.current.openModal(); // Trigger child to open the modal
-        }
+        setTimeout(() => {
+            childRef.current.openModal();
+        }, 0);
     };
 
     const queryClient = useQueryClient();
@@ -68,6 +68,13 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
             onSave={handleSubmit}
             onClose={onClose}
             ref={childRef}
+            styles={{
+                "& .MuiPaper-root": {
+                    width: "50rem",
+                    height: "40rem",
+                    maxWidth: "unset !important",
+                },
+            }}
         >
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>

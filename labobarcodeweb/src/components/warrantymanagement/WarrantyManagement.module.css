@@ -4,11 +4,17 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
 }
 
 .filterContainer{
-    
+    padding: 1rem;
+    border-bottom: 3px solid #89C5CA;
+    margin-bottom: 0.5rem;
+    /* display: flex;
+    align-items: center;
+    justify-content: flex-start; */
+
 }
 .tableHead th {
     font-weight: bold !important;

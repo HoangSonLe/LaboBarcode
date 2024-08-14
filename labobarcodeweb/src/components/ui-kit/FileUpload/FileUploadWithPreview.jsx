@@ -58,10 +58,10 @@ const FileUploadWithPreview = ({ selectedFiles, setSelectedFiles }) => {
                 onChange={handleFileChange}
             />
             <TextField
-                label="Upload Files"
+                label="Tải ảnh"
                 variant="outlined"
                 fullWidth
-                value={selectedFiles.length > 0 ? `${selectedFiles.length} file(s) selected` : ""}
+                value={selectedFiles.length > 0 ? `${selectedFiles.length} file(s) đã được chọn` : ""}
                 onClick={handleTextFieldClick}
                 InputProps={{
                     readOnly: true,

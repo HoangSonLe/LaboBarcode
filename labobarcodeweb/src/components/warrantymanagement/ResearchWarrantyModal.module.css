@@ -1,7 +1,8 @@
-.containerFlex {
+.container {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 .customModal {
     width: 50rem !important;
@@ -16,8 +17,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 12rem;
-    width: 35rem;
+    height: 20rem;
+    width: 40rem;
     background: #bee0e1;
     box-shadow: 0px 1px 2px #00000029;
     border: 2px solid #148f96;
@@ -31,6 +32,101 @@
     width: 10%;
     height: 100%;
     border-left: 2px dotted #148f96;
-    /* writing-mode: vertical-rl;
-    text-orientation: upright; */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rightContent{
+    transform: rotate(90deg);
+    width: 7rem;
+    transform-origin: 0 0;
+    position: absolute;
+    bottom: 60%;
+    left: 65%;
+    font-weight: bold;
+    letter-spacing: 3px;
+    font-size: 1.3rem;
+}
+.titleInventory {
+    letter-spacing: 2.24px;
+    color: #47c97b;
+    text-transform: uppercase;
+    opacity: 1;
+}
+.titleInventory {
+    letter-spacing: 2.24px;
+    color: #47c97b;
+    text-transform: uppercase;
+    opacity: 1;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.titleNoInventory {
+    letter-spacing: 2.72px;
+    color: #f92f2f;
+    text-transform: uppercase;
+    opacity: 1;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0 0.2rem;
+}
+.patientName {
+    text-align: center;
+    width: 100%;
+    padding: 0.1rem 0 0.5rem;
+    letter-spacing: 2px;
+    color: #156673;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.productContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem 2rem 2rem;
+}
+.imageDiv {
+    width: 17rem;
+    height: 10rem;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    box-shadow: 6px 11px 16px #2f20209e;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.imageDiv img{
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+}
+.productInfor {
+    flex:1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.productName {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #1C4485;
+    word-wrap: break-word;
+    letter-spacing: 2px;
+    padding: 0.5rem;
+    text-align: center;
+}
+.expirationDate {
+    color: black;
+    font-weight: 900;
+    padding: 0.5rem;
 }

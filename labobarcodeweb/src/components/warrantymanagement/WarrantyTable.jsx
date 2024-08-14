@@ -1,7 +1,19 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
+import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+    Button,
+    Chip,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+    TextField,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
@@ -17,14 +29,19 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import * as React from "react";
 import { toast } from "react-toastify";
 import { deleteWarranty } from "../../apis/warranty.api";
 import AddOrEditWarrantyModal from "./AddOrEditWarrantyModal";
+import ResearchWarrantyModal from "./ResearchWarrantyModal";
 import styles from "./WarrantyManagement.module.css";
+import { LoadingButton } from "@mui/lab";
 function createData(
+    expiredStatus,
     warrantyId,
     patientName,
     patientPhoneNumber,
@@ -38,6 +55,7 @@ function createData(
     updatedAt
 ) {
     return {
+        expiredStatus,
         warrantyId,
         patientName,
         patientPhoneNumber,
@@ -54,6 +72,7 @@ function createData(
 
 const rows = [
     createData(
+        true,
         1,
         "patientName",
         "patientPhoneNumber",
@@ -67,6 +86,7 @@ const rows = [
         null
     ),
     createData(
+        false,
         2,
         "patientName2",
         "patientPhoneNumber2",
@@ -81,6 +101,12 @@ const rows = [
     ),
 ];
 const headCells = [
+    {
+        id: 0,
+        numeric: false,
+        label: "Trạng thái",
+        minWidth: 100,
+    },
     {
         id: 1,
         numeric: false,
@@ -138,22 +164,59 @@ const headCells = [
 ];
 
 export default function WarrantyTable({ tableData }) {
+    const defaultSearch = {
+        searchString: "",
+        expiredFromDate: null,
+        expiredToDate: null,
+        expiredStatus: null,
+    };
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("patientName");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [modalProps, setModalProps] = React.useState(null);
-    const modalRef = React.useRef();
 
+    const [searchModel, setSearchModel] = React.useState(defaultSearch);
+
+    //#region Ref AddOrEdit
+    const [addOrEditModalProps, setAddOrEditModalProps] = React.useState(null);
+    const addOrEditModalRef = React.useRef();
+    const openAddOrEditModal = () => {
+        var id = null;
+        if (selected.length == 1) {
+            id = selected[0].warrantyId;
+        }
+        setAddOrEditModalProps({ id });
+        setTimeout(() => {
+            addOrEditModalRef.current.onOpenModal();
+        }, 0); // Ensure modal is rendered before calling openModal
+    };
+    const handleCloseModal = () => {
+        setAddOrEditModalProps(null); // Unmount the modal after closing
+    };
+
+    //#endregion
+    //#region SearchCardNumber
+    const [searchCardNumberModalProps, setModalProps] = React.useState(false);
+    const searchCardNumberModalRef = React.useRef();
+    const openSearchCardModal = () => {
+        setModalProps(true);
+        setTimeout(() => {
+            searchCardNumberModalRef.current.onOpenModal();
+        }, 0); // Ensure modal is rendered before calling openModal
+    };
+    const handleCloseSearchCardModal = () => {
+        setModalProps(null); // Unmount the modal after closing
+    };
+    //#endregion
+    //#region API
     const queryClient = useQueryClient();
-
     tableData = {
         dataRows: rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
         total: rows.length,
     };
 
-    const warrantysQuery = useQuery({
+    const { data, error, isLoading, refetch } = useQuery({
         queryKey: ["warrantys", page],
         queryFn: () => {
             const controller = new AbortController();
@@ -187,6 +250,11 @@ export default function WarrantyTable({ tableData }) {
             queryClient.invalidateQueries({ queryKey: ["warrantys", page], exact: true });
         },
     });
+    //#endregion
+    //#region Handle Action Table
+    const handleInputChange = (name) => (event) => {
+        setSearchModel((prev) => ({ ...prev, [name]: event.target.value }));
+    };
     const handleOnDelete = () => {
         deleteWarrantyMutation.mutate(selected[0].warrantyId);
     };
@@ -196,7 +264,6 @@ export default function WarrantyTable({ tableData }) {
         setOrder(isAsc ? "desc" : "asc");
         setOrderBy(property);
     };
-
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelected = rows.map((n) => n.warrantyId);
@@ -205,7 +272,7 @@ export default function WarrantyTable({ tableData }) {
         }
         setSelected([]);
     };
-    const handleClick = (event, id) => {
+    const handleClickRowItem = (event, id) => {
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
@@ -223,7 +290,6 @@ export default function WarrantyTable({ tableData }) {
         }
         setSelected(newSelected);
     };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -232,38 +298,145 @@ export default function WarrantyTable({ tableData }) {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+    const onClickSearch = () => {
+        refetch();
+    };
+    const onClickClearSearch = () => {
+        setSearchModel(defaultSearch);
+    };
     const isSelected = (id) => selected.indexOf(id) !== -1;
-
+    //#endregion
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : rowsPerPage;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 5;
 
     let numSelected = selected.length;
-    const openAddOrEditModal = () => {
-        var id = null;
-        if (selected.length == 1) {
-            id = selected[0].warrantyId;
-        }
-        setModalProps({ id });
-        setTimeout(() => {
-            modalRef.current.onOpenModal();
-        }, 0); // Ensure modal is rendered before calling openModal
-    };
-    const handleCloseModal = () => {
-        setModalProps(null); // Unmount the modal after closing
-    };
-    let total = warrantysQuery.isLoading ? 0 : warrantysQuery.data.dataRows.length;
+
+    let total = isLoading ? 0 : data.dataRows.length;
+
     return (
         <Box
             sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
         >
-            {modalProps && (
+            {addOrEditModalProps && (
                 <AddOrEditWarrantyModal
-                    ref={modalRef}
-                    id={modalProps.id}
+                    ref={addOrEditModalRef}
+                    id={addOrEditModalProps.id}
                     onClose={handleCloseModal}
                 />
             )}
+
             <Paper sx={{ width: "90%" }}>
+                <div className={clsx(styles.filterContainer)}>
+                    <Stack
+                        direction={{ sm: "column", md: "row" }}
+                        spacing={{ xs: 1, sm: 2, md: 2 }}
+                    >
+                        <TextField
+                            label="Tìm kiếm"
+                            variant="outlined"
+                            size="small"
+                            value={searchModel.searchString}
+                            onChange={handleInputChange("searchString")}
+                        />
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DatePicker
+                                label="Ngày hết hạn từ"
+                                views={["year", "month", "day"]}
+                                value={searchModel.expiredFromDate}
+                                onChange={(value) =>
+                                    setSearchModel((prev) => ({
+                                        ...prev,
+                                        expiredFromDate: value,
+                                    }))
+                                }
+                                slotProps={{ textField: { size: "small" } }}
+                            />
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DatePicker
+                                label="Ngày hết hạn đến"
+                                views={["year", "month", "day"]}
+                                value={searchModel.expiredToDate}
+                                onChange={(value) =>
+                                    setSearchModel((prev) => ({
+                                        ...prev,
+                                        expiredToDate: value,
+                                    }))
+                                }
+                                format="DD/MM/YYYY"
+                                slotProps={{ textField: { size: "small" } }}
+                            />
+                        </LocalizationProvider>
+                        <FormControl sx={{ ml: 1, minWidth: 120 }} size="small">
+                            <InputLabel id="expiredStatusLabel">Trạng thái</InputLabel>
+                            <Select
+                                size="small"
+                                labelId="expiredStatusLabel"
+                                value={searchModel.expiredStatus}
+                                label="Trạng thái"
+                                onChange={handleInputChange("expiredStatus")}
+                            >
+                                <MenuItem value={true}>Còn hạn</MenuItem>
+                                <MenuItem value={false}>Hết hạn</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <Button
+                            onClick={onClickClearSearch}
+                            variant="outlined"
+                            startIcon={<CleaningServicesIcon />}
+                            sx={{
+                                backgroundColor: "rgba(98, 0, 238, 0.1)", // Set the background color
+                                borderColor: "purple", // Change border color if needed
+                                color: "purple", // Change text color if needed
+                                "&:hover": {
+                                    backgroundColor: "rgba(98, 0, 238, 0.2)", // Change background on hover
+                                    borderColor: "purple",
+                                },
+                            }}
+                        >
+                            Xóa bộ lộc
+                        </Button>
+                        <LoadingButton
+                            onClick={onClickSearch}
+                            variant="contained"
+                            sx={{
+                                marginRight: "5px",
+                                backgroundColor: "green", // Default background color
+                                color: "white", // Text color
+                                "&:hover": {
+                                    backgroundColor: "darkgreen", // Color on hover
+                                },
+                            }}
+                            loading = {isLoading}
+                            loadingPosition="start"
+                            startIcon={<SearchIcon />}
+                        >
+                            Tìm kiếm
+                        </LoadingButton>
+                        <Button
+                            onClick={openSearchCardModal}
+                            variant="contained"
+                            sx={{
+                                marginRight: "5px",
+                                backgroundColor: "green", // Default background color
+                                color: "white", // Text color
+                                "&:hover": {
+                                    backgroundColor: "darkgreen", // Color on hover
+                                },
+                            }}
+                            startIcon={<ContentPasteSearchIcon />}
+                        >
+                            Tra mã bảo hành
+                        </Button>
+                    </Stack>
+                    {searchCardNumberModalProps && (
+                        <ResearchWarrantyModal
+                            ref={searchCardNumberModalRef}
+                            id={searchCardNumberModalProps.id}
+                            onClose={handleCloseSearchCardModal}
+                        />
+                    )}
+                </div>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                         <TableHead className={clsx(styles.tableHead)}>
@@ -315,7 +488,7 @@ export default function WarrantyTable({ tableData }) {
                         </TableHead>
 
                         <TableBody>
-                            {warrantysQuery.isLoading && (
+                            {isLoading && (
                                 <TableRow
                                     style={{
                                         height: 53 * emptyRows,
@@ -324,15 +497,17 @@ export default function WarrantyTable({ tableData }) {
                                     <TableCell colSpan={6}>Loading....</TableCell>
                                 </TableRow>
                             )}
-                            {!warrantysQuery.isLoading &&
-                                warrantysQuery.data.dataRows.map((row, index) => {
+                            {!isLoading &&
+                                data.dataRows.map((row, index) => {
                                     const isItemSelected = isSelected(row.warrantyId);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.warrantyId)}
+                                            onClick={(event) =>
+                                                handleClickRowItem(event, row.warrantyId)
+                                            }
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -362,7 +537,15 @@ export default function WarrantyTable({ tableData }) {
                                                 id={labelId}
                                                 scope="row"
                                                 padding="none"
+                                                align="center"
                                             >
+                                                {row.expiredStatus ? (
+                                                    <Chip label="Còn hạn" color="success" />
+                                                ) : (
+                                                    <Chip label="Hết hạn" color="error" />
+                                                )}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
                                                 {row.patientName}
                                             </TableCell>
                                             <TableCell align="left">
@@ -373,10 +556,10 @@ export default function WarrantyTable({ tableData }) {
                                             <TableCell align="left">{row.doctor}</TableCell>
                                             <TableCell align="left">{row.product}</TableCell>
                                             <TableCell align="left">{row.codeNumber}</TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">
                                                 {row.expirationDate.toLocaleDateString()}
                                             </TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">
                                                 {(
                                                     row.updatedAt ?? row.createdAt
                                                 ).toLocaleDateString()}

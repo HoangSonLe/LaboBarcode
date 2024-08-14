@@ -18,7 +18,7 @@ function SampleNextArrow(props) {
     return (
         <div
             className={clsx(className, styles.arrowCustom)}
-            style={{ ...style, right: 0 }}
+            style={{ ...style, right: 0, zIndex:99 }}
             onClick={onClick}
         />
     );
@@ -29,7 +29,7 @@ function SamplePrevArrow(props) {
     return (
         <div
             className={clsx(className, styles.arrowCustom)}
-            style={{ ...style, left: 0 }}
+            style={{ ...style, left: 0, zIndex:99 }}
             onClick={onClick}
         />
     );
