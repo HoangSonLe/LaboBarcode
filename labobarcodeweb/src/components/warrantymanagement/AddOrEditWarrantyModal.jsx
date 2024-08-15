@@ -10,7 +10,17 @@ import FileUploadWithPreview from "../ui-kit/FileUpload/FileUploadWithPreview";
 import styles from "./AddOrEditWarrantyModal.module.css";
 import moment from "moment";
 const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        clinic: "",
+        codeNumber: "",
+        doctor: "",
+        expirationDate: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
+        imageSrcList: [],
+        labName: "",
+        patientName: "",
+        patientPhoneNumber: "",
+        product: "",
+    });
     const [selectedFiles, setSelectedFiles] = useState([]);
     const childRef = React.useRef();
 
@@ -23,13 +33,8 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
     const queryClient = useQueryClient();
     const warrantyQuery = useQuery({
         queryKey: ["warranty", id],
-        queryFn: () => ({
-            data: {
-                patientName: "Test",
-                patientPhoneNumber: "09087654323",
-            },
-        }), //getWarranty(id),
-        // enabled: !!id,
+        queryFn: () => getWarranty(id),
+        enabled: !!id,
         staleTime: 1000 * 10,
     });
 
@@ -42,10 +47,10 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
 
     useEffect(() => {
         if (warrantyQuery.data) {
-            console.log(warrantyQuery.data.data);
-            setFormData(warrantyQuery.data.data);
+            console.log(warrantyQuery.data.data.data);
+            setFormData(warrantyQuery.data.data.data);
         }
-    }, [warrantyQuery.data]);
+    }, [warrantyQuery.data?.data]);
 
     const handleInputChange = (name) => (event) => {
         setFormData((prev) => ({ ...prev, [name]: event.target.value }));

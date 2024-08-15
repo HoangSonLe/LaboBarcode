@@ -4,9 +4,11 @@ import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
+import { LoadingButton } from "@mui/lab";
 import {
     Button,
     Chip,
+    CircularProgress,
     FormControl,
     InputLabel,
     MenuItem,
@@ -35,77 +37,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import * as React from "react";
 import { toast } from "react-toastify";
-import { deleteWarranty } from "../../apis/warranty.api";
+import { deleteWarranty, getWarrantys } from "../../apis/warranty.api";
 import AddOrEditWarrantyModal from "./AddOrEditWarrantyModal";
 import ResearchWarrantyModal from "./ResearchWarrantyModal";
 import styles from "./WarrantyManagement.module.css";
-import { LoadingButton } from "@mui/lab";
-function createData(
-    expiredStatus,
-    warrantyId,
-    patientName,
-    patientPhoneNumber,
-    clinic,
-    labName,
-    doctor,
-    product,
-    codeNumber,
-    expirationDate,
-    createdAt,
-    updatedAt
-) {
-    return {
-        expiredStatus,
-        warrantyId,
-        patientName,
-        patientPhoneNumber,
-        clinic,
-        labName,
-        doctor,
-        product,
-        codeNumber,
-        expirationDate,
-        createdAt,
-        updatedAt,
-    };
-}
+import moment from "moment";
 
-const rows = [
-    createData(
-        true,
-        1,
-        "patientName",
-        "patientPhoneNumber",
-        "clinic",
-        "labName",
-        "doctor",
-        "product",
-        "codeNumber",
-        new Date(),
-        new Date(),
-        null
-    ),
-    createData(
-        false,
-        2,
-        "patientName2",
-        "patientPhoneNumber2",
-        "clinic2",
-        "labName2",
-        "doctor2",
-        "product2",
-        "codeNumber2",
-        new Date(),
-        new Date(),
-        new Date()
-    ),
-];
 const headCells = [
     {
         id: 0,
         numeric: false,
         label: "Trạng thái",
         minWidth: 100,
+    },
+    {
+        id: 7,
+        numeric: false,
+        label: "Mã Code",
+        minWidth: 170,
     },
     {
         id: 1,
@@ -143,12 +92,7 @@ const headCells = [
         label: "Sản phẩm",
         minWidth: 170,
     },
-    {
-        id: 7,
-        numeric: false,
-        label: "Mã Code",
-        minWidth: 170,
-    },
+
     {
         id: 8,
         numeric: false,
@@ -166,9 +110,9 @@ const headCells = [
 export default function WarrantyTable({ tableData }) {
     const defaultSearch = {
         searchString: "",
-        expiredFromDate: null,
-        expiredToDate: null,
-        expiredStatus: null,
+        expiredFromDate: moment(),
+        expiredToDate: moment(new Date(), "DD-MM-YYYY").add(5, "days"),
+        expiredStatus: undefined,
     };
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("patientName");
@@ -184,7 +128,7 @@ export default function WarrantyTable({ tableData }) {
     const openAddOrEditModal = () => {
         var id = null;
         if (selected.length == 1) {
-            id = selected[0].warrantyId;
+            id = selected[0];
         }
         setAddOrEditModalProps({ id });
         setTimeout(() => {
@@ -211,11 +155,6 @@ export default function WarrantyTable({ tableData }) {
     //#endregion
     //#region API
     const queryClient = useQueryClient();
-    tableData = {
-        dataRows: rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        total: rows.length,
-    };
-
     const { data, error, isLoading, refetch } = useQuery({
         queryKey: ["warrantys", page],
         queryFn: () => {
@@ -223,21 +162,21 @@ export default function WarrantyTable({ tableData }) {
             setTimeout(() => {
                 controller.abort();
             }, 5000);
-            return tableData;
-            // return getWarrantys(
-            //     {
-            //         searchModel: {
-            //             searchString: "",
-            //             fromDate: new Date(),
-            //             toDate: new Date(),
-            //         },
-            //         sort: orderBy,
-            //         sortDirection: order,
-            //         page: page,
-            //         pageSize: rowsPerPage,
-            //     },
-            //     controller.signal
-            // );
+            // return tableData;
+            return getWarrantys(
+                {
+                    searchModel: {
+                        searchString: "",
+                        fromDate: searchModel.expiredFromDate,
+                        toDate: searchModel.expiredToDate,
+                    },
+                    sort: orderBy,
+                    sortDirection: order,
+                    page: page + 1,
+                    pageSize: rowsPerPage,
+                },
+                controller.signal
+            );
         },
         keepPreviousData: true,
         retry: 0,
@@ -256,7 +195,7 @@ export default function WarrantyTable({ tableData }) {
         setSearchModel((prev) => ({ ...prev, [name]: event.target.value }));
     };
     const handleOnDelete = () => {
-        deleteWarrantyMutation.mutate(selected[0].warrantyId);
+        deleteWarrantyMutation.mutate(selected[0]);
     };
 
     const handleRequestSort = (event, property) => {
@@ -266,7 +205,7 @@ export default function WarrantyTable({ tableData }) {
     };
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.warrantyId);
+            const newSelected = data?.data?.data.map((n) => n.warrantyId);
             setSelected(newSelected);
             return;
         }
@@ -307,11 +246,11 @@ export default function WarrantyTable({ tableData }) {
     const isSelected = (id) => selected.indexOf(id) !== -1;
     //#endregion
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 5;
-
+    let total = !data ? 0 : data.data.total;
     let numSelected = selected.length;
-
-    let total = isLoading ? 0 : data.dataRows.length;
+    const emptyRows =
+        rowsPerPage - Math.min(rowsPerPage, data?.data?.data.length - page * rowsPerPage);
+    console.log(emptyRows);
 
     return (
         <Box
@@ -407,7 +346,7 @@ export default function WarrantyTable({ tableData }) {
                                     backgroundColor: "darkgreen", // Color on hover
                                 },
                             }}
-                            loading = {isLoading}
+                            loading={isLoading}
                             loadingPosition="start"
                             startIcon={<SearchIcon />}
                         >
@@ -488,20 +427,22 @@ export default function WarrantyTable({ tableData }) {
                         </TableHead>
 
                         <TableBody>
-                            {isLoading && (
+                            {/* {isLoading && (
                                 <TableRow
                                     style={{
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={6}>Loading....</TableCell>
+                                    <TableCell align="center" colSpan={headCells.length + 1}>
+                                        <CircularProgress color="success" />
+                                    </TableCell>
                                 </TableRow>
-                            )}
+                            )} */}
                             {!isLoading &&
-                                data.dataRows.map((row, index) => {
+                                data.data.data.map((row, index) => {
                                     const isItemSelected = isSelected(row.warrantyId);
                                     const labelId = `enhanced-table-checkbox-${index}`;
-
+                                    const updateDate = row.updatedAt ?? row.createdAt;
                                     return (
                                         <TableRow
                                             hover
@@ -514,6 +455,9 @@ export default function WarrantyTable({ tableData }) {
                                             key={row.warrantyId}
                                             selected={isItemSelected}
                                             sx={{ cursor: "pointer" }}
+                                            style={{
+                                                height: 53,
+                                            }}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
@@ -545,6 +489,7 @@ export default function WarrantyTable({ tableData }) {
                                                     <Chip label="Hết hạn" color="error" />
                                                 )}
                                             </TableCell>
+                                            <TableCell align="left">{row.codeNumber}</TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.patientName}
                                             </TableCell>
@@ -554,15 +499,26 @@ export default function WarrantyTable({ tableData }) {
                                             <TableCell align="left">{row.clinic}</TableCell>
                                             <TableCell align="left">{row.labName}</TableCell>
                                             <TableCell align="left">{row.doctor}</TableCell>
-                                            <TableCell align="left">{row.product}</TableCell>
-                                            <TableCell align="left">{row.codeNumber}</TableCell>
-                                            <TableCell align="center">
-                                                {row.expirationDate.toLocaleDateString()}
+                                            <TableCell>
+                                                <Box
+                                                    component="div"
+                                                    sx={{
+                                                        textOverflow: "ellipsis",
+                                                        width: "20rem",
+                                                        overflow: "hidden",
+                                                    }}
+                                                >
+                                                    {row.product}
+                                                </Box>
                                             </TableCell>
                                             <TableCell align="center">
-                                                {(
-                                                    row.updatedAt ?? row.createdAt
-                                                ).toLocaleDateString()}
+                                                {row.expirationDate != null &&
+                                                    new Date(
+                                                        row.expirationDate
+                                                    ).toLocaleDateString()}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {new Date(updateDate).toLocaleDateString()}
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -675,7 +631,7 @@ export default function WarrantyTable({ tableData }) {
                         <TablePagination
                             rowsPerPageOptions={[5, 10, 25]}
                             component="div"
-                            count={rows.length}
+                            count={total}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
