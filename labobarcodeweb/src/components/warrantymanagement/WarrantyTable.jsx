@@ -235,7 +235,7 @@ export default function WarrantyTable({ tableData }) {
     };
     const handleOnDelete = () => {
         // deleteWarrantyMutation.mutate(selected[0]);
-        deleteWarrantiesMutation.mutate(JSON.stringify({ ids: selected }));
+        deleteWarrantiesMutation.mutate(selected);
     };
 
     const handleRequestSort = (event, property) => {
@@ -244,6 +244,8 @@ export default function WarrantyTable({ tableData }) {
         setOrderBy(property);
     };
     const handleSelectAllClick = (event) => {
+        console.log(event.target.checked);
+        // if(event.target.indeterminate)
         if (event.target.checked) {
             const newSelected = data?.data?.data.map((n) => n.warrantyId);
             setSelected(newSelected);
@@ -318,7 +320,6 @@ export default function WarrantyTable({ tableData }) {
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
                                 label="Ngày hết hạn từ"
-                                views={["year", "month", "day"]}
                                 value={searchModel.expiredFromDate}
                                 onChange={(value) =>
                                     setSearchModel((prev) => ({
@@ -332,7 +333,6 @@ export default function WarrantyTable({ tableData }) {
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
                                 label="Ngày hết hạn đến"
-                                views={["year", "month", "day"]}
                                 value={searchModel.expiredToDate}
                                 onChange={(value) =>
                                     setSearchModel((prev) => ({

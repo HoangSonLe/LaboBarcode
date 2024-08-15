@@ -56,15 +56,14 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
         setFormData((prev) => ({ ...prev, [name]: event.target.value }));
     };
     const handleSubmit = (callbackCloseModal) => {
-        debugger
         const postData = new FormData();
 
         // Append each key-value pair from the object to FormData
         Object.keys(formData).forEach((key) => {
             postData.append(key, formData[key]);
         });
-        postData.append("imageSrcList", selectedFiles);
-
+        // postData.append("imageSrcList", selectedFiles);
+        console.log(postData);
         createOrEditWarrantyMutation.mutate(postData, {
             onSuccess: () => {
                 toast.success("Thêm thành công!");
