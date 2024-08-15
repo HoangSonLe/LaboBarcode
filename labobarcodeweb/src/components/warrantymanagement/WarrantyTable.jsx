@@ -8,7 +8,6 @@ import { LoadingButton } from "@mui/lab";
 import {
     Button,
     Chip,
-    CircularProgress,
     FormControl,
     InputLabel,
     MenuItem,
@@ -35,13 +34,13 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import * as React from "react";
+import moment from "moment";
 import { toast } from "react-toastify";
-import { deleteWarranty, getWarrantys } from "../../apis/warranty.api";
+import { deleteWarranty, deleteWarranties, getWarranties } from "../../apis/warranty.api";
 import AddOrEditWarrantyModal from "./AddOrEditWarrantyModal";
 import ResearchWarrantyModal from "./ResearchWarrantyModal";
 import styles from "./WarrantyManagement.module.css";
-import moment from "moment";
+import { useEffect, useRef, useState } from "react";
 
 const headCells = [
     {
@@ -114,17 +113,17 @@ export default function WarrantyTable({ tableData }) {
         expiredToDate: moment(new Date(), "DD-MM-YYYY").add(5, "days"),
         expiredStatus: undefined,
     };
-    const [order, setOrder] = React.useState("asc");
-    const [orderBy, setOrderBy] = React.useState("patientName");
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [order, setOrder] = useState("asc");
+    const [orderBy, setOrderBy] = useState("patientName");
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const [searchModel, setSearchModel] = React.useState(defaultSearch);
+    const [searchModel, setSearchModel] = useState(defaultSearch);
 
     //#region Ref AddOrEdit
-    const [addOrEditModalProps, setAddOrEditModalProps] = React.useState(null);
-    const addOrEditModalRef = React.useRef();
+    const [addOrEditModalProps, setAddOrEditModalProps] = useState(null);
+    const addOrEditModalRef = useRef();
     const openAddOrEditModal = () => {
         var id = null;
         if (selected.length == 1) {
@@ -141,8 +140,8 @@ export default function WarrantyTable({ tableData }) {
 
     //#endregion
     //#region SearchCardNumber
-    const [searchCardNumberModalProps, setModalProps] = React.useState(false);
-    const searchCardNumberModalRef = React.useRef();
+    const [searchCardNumberModalProps, setModalProps] = useState(false);
+    const searchCardNumberModalRef = useRef();
     const openSearchCardModal = () => {
         setModalProps(true);
         setTimeout(() => {
@@ -156,17 +155,17 @@ export default function WarrantyTable({ tableData }) {
     //#region API
     const queryClient = useQueryClient();
     const { data, error, isLoading, refetch } = useQuery({
-        queryKey: ["warrantys", page],
+        queryKey: ["warrantys", page, rowsPerPage],
         queryFn: () => {
             const controller = new AbortController();
             setTimeout(() => {
                 controller.abort();
             }, 5000);
             // return tableData;
-            return getWarrantys(
+            return getWarranties(
                 {
                     searchModel: {
-                        searchString: "",
+                        searchString: searchModel.searchString,
                         fromDate: searchModel.expiredFromDate,
                         toDate: searchModel.expiredToDate,
                     },
@@ -181,12 +180,52 @@ export default function WarrantyTable({ tableData }) {
         keepPreviousData: true,
         retry: 0,
     });
-
+    useEffect(() => {
+        if (data?.data?.total > (page + 1) * data?.data?.data.length) {
+            console.log(data?.data?.total, (page + 1) * data?.data?.data.length, page);
+            queryClient.prefetchQuery({
+                queryKey: ["warrantys", page + 1, rowsPerPage],
+                queryFn: () => {
+                    const controller = new AbortController();
+                    setTimeout(() => {
+                        controller.abort();
+                    }, 5000);
+                    return getWarranties(
+                        {
+                            searchModel: {
+                                searchString: searchModel.searchString,
+                                fromDate: searchModel.expiredFromDate,
+                                toDate: searchModel.expiredToDate,
+                            },
+                            sort: orderBy,
+                            sortDirection: order,
+                            page: page + 2,
+                            pageSize: rowsPerPage,
+                        },
+                        controller.signal
+                    );
+                },
+                keepPreviousData: true,
+                retry: 0,
+            });
+        }
+    }, [data, page, rowsPerPage, queryClient]);
     const deleteWarrantyMutation = useMutation({
         mutationFn: (id) => deleteWarranty(id),
         onSuccess: (_, id) => {
             toast.success(`Xóa thành công`);
-            queryClient.invalidateQueries({ queryKey: ["warrantys", page], exact: true });
+            queryClient.invalidateQueries({ queryKey: ["warrantys"] });
+            let newSelected = selected.filter((i) => i != id);
+            setSelected(newSelected);
+        },
+    });
+    const deleteWarrantiesMutation = useMutation({
+        mutationFn: (idList) => deleteWarranties(idList),
+        onSuccess: (_, idList) => {
+            toast.success(`Xóa thành công`);
+            queryClient.invalidateQueries({ queryKey: ["warrantys"] });
+            let newSelected = selected.filter((i) => !idList.includes(i));
+            setSelected(newSelected);
         },
     });
     //#endregion
@@ -195,7 +234,8 @@ export default function WarrantyTable({ tableData }) {
         setSearchModel((prev) => ({ ...prev, [name]: event.target.value }));
     };
     const handleOnDelete = () => {
-        deleteWarrantyMutation.mutate(selected[0]);
+        // deleteWarrantyMutation.mutate(selected[0]);
+        deleteWarrantiesMutation.mutate(JSON.stringify({ ids: selected }));
     };
 
     const handleRequestSort = (event, property) => {
@@ -248,10 +288,8 @@ export default function WarrantyTable({ tableData }) {
     // Avoid a layout jump when reaching the last page with empty rows.
     let total = !data ? 0 : data.data.total;
     let numSelected = selected.length;
-    const emptyRows =
-        rowsPerPage - Math.min(rowsPerPage, data?.data?.data.length - page * rowsPerPage);
-    console.log(emptyRows);
-
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.data?.total) : 0;
+    console.log(page);
     return (
         <Box
             sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -377,7 +415,11 @@ export default function WarrantyTable({ tableData }) {
                     )}
                 </div>
                 <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                    <Table
+                        stickyHeader
+                        sx={{ minWidth: 750, height: 600 }}
+                        aria-labelledby="tableTitle"
+                    >
                         <TableHead className={clsx(styles.tableHead)}>
                             <TableRow>
                                 <TableCell padding="checkbox">
@@ -438,91 +480,83 @@ export default function WarrantyTable({ tableData }) {
                                     </TableCell>
                                 </TableRow>
                             )} */}
-                            {!isLoading &&
-                                data.data.data.map((row, index) => {
-                                    const isItemSelected = isSelected(row.warrantyId);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-                                    const updateDate = row.updatedAt ?? row.createdAt;
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) =>
-                                                handleClickRowItem(event, row.warrantyId)
-                                            }
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.warrantyId}
-                                            selected={isItemSelected}
-                                            sx={{ cursor: "pointer" }}
-                                            style={{
-                                                height: 53,
-                                            }}
+                            {data?.data?.data.map((row, index) => {
+                                const isItemSelected = isSelected(row.warrantyId);
+                                const labelId = `enhanced-table-checkbox-${index}`;
+                                const updateDate = row.updatedAt ?? row.createdAt;
+                                return (
+                                    <TableRow
+                                        hover
+                                        onClick={(event) =>
+                                            handleClickRowItem(event, row.warrantyId)
+                                        }
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        tabIndex={-1}
+                                        key={row.warrantyId}
+                                        selected={isItemSelected}
+                                        sx={{ cursor: "pointer", height: 5 }}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                color="primary"
+                                                checked={isItemSelected}
+                                                inputProps={{
+                                                    "aria-labelledby": labelId,
+                                                }}
+                                                sx={{
+                                                    "&.Mui-checked": {
+                                                        color: "#19d2cb", // Color when checked
+                                                    },
+                                                    "&.MuiCheckbox-indeterminate": {
+                                                        color: "#19d2cb", // Color when checked
+                                                    },
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell
+                                            component="th"
+                                            id={labelId}
+                                            scope="row"
+                                            padding="none"
+                                            align="center"
                                         >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        "aria-labelledby": labelId,
-                                                    }}
-                                                    sx={{
-                                                        "&.Mui-checked": {
-                                                            color: "#19d2cb", // Color when checked
-                                                        },
-                                                        "&.MuiCheckbox-indeterminate": {
-                                                            color: "#19d2cb", // Color when checked
-                                                        },
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="none"
-                                                align="center"
+                                            {row.expiredStatus ? (
+                                                <Chip label="Còn hạn" color="success" />
+                                            ) : (
+                                                <Chip label="Hết hạn" color="error" />
+                                            )}
+                                        </TableCell>
+                                        <TableCell align="left">{row.codeNumber}</TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {row.patientName}
+                                        </TableCell>
+                                        <TableCell align="left">{row.patientPhoneNumber}</TableCell>
+                                        <TableCell align="left">{row.clinic}</TableCell>
+                                        <TableCell align="left">{row.labName}</TableCell>
+                                        <TableCell align="left">{row.doctor}</TableCell>
+                                        <TableCell>
+                                            <Box
+                                                component="div"
+                                                sx={{
+                                                    textOverflow: "ellipsis",
+                                                    width: "20rem",
+                                                    overflow: "hidden",
+                                                }}
                                             >
-                                                {row.expiredStatus ? (
-                                                    <Chip label="Còn hạn" color="success" />
-                                                ) : (
-                                                    <Chip label="Hết hạn" color="error" />
-                                                )}
-                                            </TableCell>
-                                            <TableCell align="left">{row.codeNumber}</TableCell>
-                                            <TableCell component="th" scope="row">
-                                                {row.patientName}
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                {row.patientPhoneNumber}
-                                            </TableCell>
-                                            <TableCell align="left">{row.clinic}</TableCell>
-                                            <TableCell align="left">{row.labName}</TableCell>
-                                            <TableCell align="left">{row.doctor}</TableCell>
-                                            <TableCell>
-                                                <Box
-                                                    component="div"
-                                                    sx={{
-                                                        textOverflow: "ellipsis",
-                                                        width: "20rem",
-                                                        overflow: "hidden",
-                                                    }}
-                                                >
-                                                    {row.product}
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {row.expirationDate != null &&
-                                                    new Date(
-                                                        row.expirationDate
-                                                    ).toLocaleDateString()}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {new Date(updateDate).toLocaleDateString()}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                                                {row.product}
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {row.expirationDate != null &&
+                                                new Date(row.expirationDate).toLocaleDateString()}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {new Date(updateDate).toLocaleDateString()}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{

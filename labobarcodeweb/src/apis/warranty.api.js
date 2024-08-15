@@ -1,6 +1,7 @@
+import axios from "axios";
 import http from "../utils/http";
 
-export const getWarrantys = (searchModel, signal) =>
+export const getWarranties = (searchModel, signal) =>
     http.post("warranty", searchModel, {
         signal, // Pass the AbortSignal for cancellation support
     });
@@ -13,4 +14,16 @@ export const createWarranty = (data) => http.post("/warranty", data);
 export const updateWarranty = (data) => http.put(`/warranty`, data);
 
 export const deleteWarranty = (id) => http.delete(`warranty/${id}`);
-export const deleteWarrantys = (idList) => http.post(`warranty`, idList);
+// export const deleteWarranties = (idList) =>
+//     http.delete(`warranty/deleteMany`, {
+//         data: idList,
+//     });
+export const deleteWarranties = (idList) =>
+  axios({
+      method: 'DELETE',
+      url: `https://localhost:44348/api/v1/Warranty/deleteMany`,
+      data: idList, // Dữ liệu gửi đi trong thân yêu cầu
+      headers: {
+          "Content-Type": "application/json",
+      },
+  });

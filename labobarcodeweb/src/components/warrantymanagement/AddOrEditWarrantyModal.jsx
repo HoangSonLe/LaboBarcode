@@ -39,9 +39,9 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
     });
 
     const createOrEditWarrantyMutation = useMutation({
-        mutationFn: (_) => (id == null ? createWarranty(formData) : updateWarranty(formData)),
+        mutationFn: (_, data) => (id == null ? createWarranty(data) : updateWarranty(data)),
         onSuccess: (data) => {
-            queryClient.setQueryData(["warranty"], data);
+            queryClient.invalidateQueries({ queryKey: ["warrantys"] });
         },
     });
 
@@ -56,7 +56,16 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
         setFormData((prev) => ({ ...prev, [name]: event.target.value }));
     };
     const handleSubmit = (callbackCloseModal) => {
-        createOrEditWarrantyMutation.mutate(formData, {
+        debugger
+        const postData = new FormData();
+
+        // Append each key-value pair from the object to FormData
+        Object.keys(formData).forEach((key) => {
+            postData.append(key, formData[key]);
+        });
+        postData.append("imageSrcList", selectedFiles);
+
+        createOrEditWarrantyMutation.mutate(postData, {
             onSuccess: () => {
                 toast.success("Thêm thành công!");
                 callbackCloseModal();
