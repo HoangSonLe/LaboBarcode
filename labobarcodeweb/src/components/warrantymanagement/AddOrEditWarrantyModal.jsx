@@ -17,6 +17,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
         expirationDate: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
         imageSrcList: [],
         imageSrcPreviewList: [],
+        imageLinkNameSrcPreviewList: [],
         labName: "",
         patientName: "",
         patientPhoneNumber: "",
@@ -101,7 +102,6 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
     React.useImperativeHandle(ref, () => ({
         onOpenModal,
     }));
-    console.log(formData);
     return (
         <CustomizedModal
             className={styles.customModal}
@@ -227,13 +227,15 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
-                        <FileUploadWithPreview
+                    <FileUploadWithPreview
                             selectedFiles={formData.imageSrcList}
-                            existingImages={formData.imageSrcPreviewList}
+                            existingImages={(formData.imageLinkNameSrcPreviewList || []).map(filename => ({
+                                url: `https://localhost:44348/api/v1/Warranty/image/${filename}`
+                            }))}
                             setSelectedFiles={(selectedFiles) =>
                                 setFormData((prev) => ({
                                     ...prev,
-                                    imageSrcList: selectedFiles,
+                                    imageSrcList: selectedFiles
                                 }))
                             }
                         />
