@@ -2,26 +2,28 @@ import { Box, Grid, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { createWarranty, getWarranty, updateWarranty } from "../../apis/warranty.api";
-import CustomizedModal from "../ui-kit/Modal/Modal";
 import FileUploadWithPreview from "../ui-kit/FileUpload/FileUploadWithPreview";
+import CustomizedModal from "../ui-kit/Modal/Modal";
 import styles from "./AddOrEditWarrantyModal.module.css";
-import moment from "moment";
-const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
+const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
     const [formData, setFormData] = useState({
         clinic: "",
         codeNumber: "",
         doctor: "",
         expirationDate: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
         imageSrcList: [],
+        imageSrcPreviewList: [],
         labName: "",
         patientName: "",
         patientPhoneNumber: "",
         product: "",
+        warrantyId: id,
     });
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    // const [selectedFiles, setSelectedFiles] = useState([]);
     const childRef = React.useRef();
 
     const onOpenModal = () => {
@@ -39,7 +41,16 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
     });
 
     const createOrEditWarrantyMutation = useMutation({
-        mutationFn: (_, data) => (id == null ? createWarranty(data) : updateWarranty(data)),
+        mutationFn: (data) => (data.id == null ? createWarranty(data) : updateWarranty(data)),
+        onError: (error) => {
+            console.log(error.response?.data?.message);
+            // Customize error handling here
+            if (error.response && error.response.status === 400) {
+                if (error.response?.data?.message) {
+                    toast.error(error.response?.data?.message);
+                }
+            }
+        },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["warrantys"] });
         },
@@ -57,23 +68,40 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
     };
     const handleSubmit = (callbackCloseModal) => {
         const postData = new FormData();
-
         // Append each key-value pair from the object to FormData
         Object.keys(formData).forEach((key) => {
-            postData.append(key, formData[key]);
+            switch (key) {
+                case "expirationDate":
+                    postData.append(key, new Date(formData[key])?.toISOString());
+                    break;
+                case "warrantyId":
+                    if (formData[key] !== null && formData[key] !== undefined) {
+                        postData.append(key, formData[key]);
+                    }
+                    break;
+                case "imageSrcList":
+                    if (formData[key] !== null && formData[key] !== undefined) {
+                        formData[key].forEach((file, index) => {
+                            postData.append(key, file); // e.g., file0, file1, etc.
+                        });
+                    }
+                    break;
+                default:
+                    postData.append(key, formData[key]);
+                    break;
+            }
         });
-        // postData.append("imageSrcList", selectedFiles);
-        console.log(postData);
         createOrEditWarrantyMutation.mutate(postData, {
             onSuccess: () => {
-                toast.success("Thêm thành công!");
                 callbackCloseModal();
+                toast.success("Thêm thành công!");
             },
         });
     };
     React.useImperativeHandle(ref, () => ({
         onOpenModal,
     }));
+    console.log(formData);
     return (
         <CustomizedModal
             className={styles.customModal}
@@ -200,8 +228,14 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id, onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <FileUploadWithPreview
-                            selectedFiles={selectedFiles}
-                            setSelectedFiles={setSelectedFiles}
+                            selectedFiles={formData.imageSrcList}
+                            existingImages={formData.imageSrcPreviewList}
+                            setSelectedFiles={(selectedFiles) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    imageSrcList: selectedFiles,
+                                }))
+                            }
                         />
                     </Box>
                 </Grid>

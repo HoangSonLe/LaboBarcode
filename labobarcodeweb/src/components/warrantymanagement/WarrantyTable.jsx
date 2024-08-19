@@ -35,12 +35,12 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import moment from "moment";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { deleteWarranty, deleteWarranties, getWarranties } from "../../apis/warranty.api";
+import { deleteWarranties, deleteWarranty, getWarranties } from "../../apis/warranty.api";
 import AddOrEditWarrantyModal from "./AddOrEditWarrantyModal";
 import ResearchWarrantyModal from "./ResearchWarrantyModal";
 import styles from "./WarrantyManagement.module.css";
-import { useEffect, useRef, useState } from "react";
 
 const headCells = [
     {
@@ -48,12 +48,14 @@ const headCells = [
         numeric: false,
         label: "Trạng thái",
         minWidth: 100,
+        align: "center",
     },
     {
         id: 7,
         numeric: false,
         label: "Mã Code",
         minWidth: 170,
+        align: "center",
     },
     {
         id: 1,
@@ -66,6 +68,7 @@ const headCells = [
         numeric: false,
         label: "Số điện thoại",
         minWidth: 170,
+        align: "center",
     },
     {
         id: 3,
@@ -97,20 +100,22 @@ const headCells = [
         numeric: false,
         label: "Ngày hết hạn",
         minWidth: 170,
+        align: "center",
     },
     {
         id: 9,
         numeric: false,
         label: "Ngày cập nhật",
         minWidth: 170,
+        align: "center",
     },
 ];
 
 export default function WarrantyTable({ tableData }) {
     const defaultSearch = {
         searchString: "",
-        expiredFromDate: moment(),
-        expiredToDate: moment(new Date(), "DD-MM-YYYY").add(5, "days"),
+        expiredFromDate: moment(new Date(), "DD-MM-YYYY").add(-7, "days"),
+        expiredToDate: moment(new Date(), "DD-MM-YYYY").add(7, "days"),
         expiredStatus: undefined,
     };
     const [order, setOrder] = useState("asc");
@@ -178,11 +183,10 @@ export default function WarrantyTable({ tableData }) {
             );
         },
         keepPreviousData: true,
-        retry: 0,
+        retry: 3,
     });
     useEffect(() => {
         if (data?.data?.total > (page + 1) * data?.data?.data.length) {
-            console.log(data?.data?.total, (page + 1) * data?.data?.data.length, page);
             queryClient.prefetchQuery({
                 queryKey: ["warrantys", page + 1, rowsPerPage],
                 queryFn: () => {
@@ -244,8 +248,10 @@ export default function WarrantyTable({ tableData }) {
         setOrderBy(property);
     };
     const handleSelectAllClick = (event) => {
-        console.log(event.target.checked);
-        // if(event.target.indeterminate)
+        console.log("event", event.target.checked);
+        if (event.target.indeterminate) {
+            debugger;
+        }
         if (event.target.checked) {
             const newSelected = data?.data?.data.map((n) => n.warrantyId);
             setSelected(newSelected);
@@ -289,9 +295,12 @@ export default function WarrantyTable({ tableData }) {
     //#endregion
     // Avoid a layout jump when reaching the last page with empty rows.
     let total = !data ? 0 : data.data.total;
+    let currentTotal = !data ? 0 : data.data.data.length;
     let numSelected = selected.length;
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.data?.total) : 0;
-    console.log(page);
+    const emptyRows = page > 0 ? Math.max(0, Math.abs(rowsPerPage - data?.data?.data.length)) : 0;
+    console.log(currentTotal);
+    // console.log(emptyRows, page);
+    // console.log(data?.data?.total, rowsPerPage, (1 + page) * rowsPerPage - data?.data?.total, page);
     return (
         <Box
             sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -303,7 +312,6 @@ export default function WarrantyTable({ tableData }) {
                     onClose={handleCloseModal}
                 />
             )}
-
             <Paper sx={{ width: "90%" }}>
                 <div className={clsx(styles.filterContainer)}>
                     <Stack
@@ -327,6 +335,7 @@ export default function WarrantyTable({ tableData }) {
                                         expiredFromDate: value,
                                     }))
                                 }
+                                format="DD/MM/YYYY"
                                 slotProps={{ textField: { size: "small" } }}
                             />
                         </LocalizationProvider>
@@ -415,13 +424,13 @@ export default function WarrantyTable({ tableData }) {
                     )}
                 </div>
                 <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table
-                        stickyHeader
-                        sx={{ minWidth: 750, height: 600 }}
-                        aria-labelledby="tableTitle"
-                    >
+                    <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                         <TableHead className={clsx(styles.tableHead)}>
-                            <TableRow>
+                            <TableRow
+                                style={{
+                                    height: 53,
+                                }}
+                            >
                                 <TableCell padding="checkbox">
                                     <Checkbox
                                         sx={{
@@ -432,8 +441,8 @@ export default function WarrantyTable({ tableData }) {
                                                 color: "#19d2cb", // Color when checked
                                             },
                                         }}
-                                        indeterminate={numSelected > 0 && numSelected < total}
-                                        checked={total > 0 && numSelected === total}
+                                        indeterminate={numSelected > 0 && numSelected < currentTotal}
+                                        checked={currentTotal > 0 && numSelected === currentTotal}
                                         onChange={handleSelectAllClick}
                                         inputProps={{
                                             "aria-label": "select all desserts",
@@ -443,11 +452,12 @@ export default function WarrantyTable({ tableData }) {
                                 {headCells.map((headCell) => (
                                     <TableCell
                                         key={headCell.id}
-                                        align={"center"}
+                                        align={headCell.align ?? "left"}
                                         sortDirection={orderBy === headCell.id ? order : false}
                                         sx={{
                                             minWidth: headCell.minWidth,
                                         }}
+                                        padding="none"
                                     >
                                         <TableSortLabel
                                             active={orderBy === headCell.id}
@@ -495,9 +505,12 @@ export default function WarrantyTable({ tableData }) {
                                         tabIndex={-1}
                                         key={row.warrantyId}
                                         selected={isItemSelected}
-                                        sx={{ cursor: "pointer", height: 5 }}
+                                        sx={{ cursor: "pointer" }}
+                                        style={{
+                                            height: 53,
+                                        }}
                                     >
-                                        <TableCell padding="checkbox">
+                                        <TableCell size="small" padding="checkbox">
                                             <Checkbox
                                                 color="primary"
                                                 checked={isItemSelected}
@@ -515,11 +528,11 @@ export default function WarrantyTable({ tableData }) {
                                             />
                                         </TableCell>
                                         <TableCell
-                                            component="th"
                                             id={labelId}
                                             scope="row"
                                             padding="none"
                                             align="center"
+                                            size="small"
                                         >
                                             {row.expiredStatus ? (
                                                 <Chip label="Còn hạn" color="success" />
@@ -527,31 +540,51 @@ export default function WarrantyTable({ tableData }) {
                                                 <Chip label="Hết hạn" color="error" />
                                             )}
                                         </TableCell>
-                                        <TableCell align="left">{row.codeNumber}</TableCell>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell size="small" align="center" padding="none">
+                                            {row.codeNumber}
+                                        </TableCell>
+                                        <TableCell
+                                            size="small"
+                                            scope="row"
+                                            padding="none"
+                                            sx={{
+                                                overflow: "hidden",
+                                                whiteSpace: "nowrap",
+                                                textOverflow: "ellipsis",
+                                                maxWidth: 150, // Optional: Set a max width for the ellipsis to work
+                                            }}
+                                        >
                                             {row.patientName}
                                         </TableCell>
-                                        <TableCell align="left">{row.patientPhoneNumber}</TableCell>
-                                        <TableCell align="left">{row.clinic}</TableCell>
-                                        <TableCell align="left">{row.labName}</TableCell>
-                                        <TableCell align="left">{row.doctor}</TableCell>
-                                        <TableCell>
-                                            <Box
-                                                component="div"
-                                                sx={{
-                                                    textOverflow: "ellipsis",
-                                                    width: "20rem",
-                                                    overflow: "hidden",
-                                                }}
-                                            >
-                                                {row.product}
-                                            </Box>
+                                        <TableCell size="small" align="center" padding="none">
+                                            {row.patientPhoneNumber}
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell size="small" align="left" padding="none">
+                                            {row.clinic}
+                                        </TableCell>
+                                        <TableCell size="small" align="left" padding="none">
+                                            {row.labName}
+                                        </TableCell>
+                                        <TableCell size="small" align="left" padding="none">
+                                            {row.doctor}
+                                        </TableCell>
+                                        <TableCell
+                                            size="small"
+                                            padding="none"
+                                            sx={{
+                                                overflow: "hidden",
+                                                whiteSpace: "nowrap",
+                                                textOverflow: "ellipsis",
+                                                maxWidth: 150, // Optional: Set a max width for the ellipsis to work
+                                            }}
+                                        >
+                                            {row.product}
+                                        </TableCell>
+                                        <TableCell size="small" align="center" padding="none">
                                             {row.expirationDate != null &&
                                                 new Date(row.expirationDate).toLocaleDateString()}
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell size="small" align="center" padding="none">
                                             {new Date(updateDate).toLocaleDateString()}
                                         </TableCell>
                                     </TableRow>
