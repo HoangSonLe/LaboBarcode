@@ -1,35 +1,40 @@
-import React from 'react';
-import QrScanner from 'react-qr-scanner';
-
-const QrCodeScanner = () => {
-    const handleScan = (data) => {
-        console.log("Scanning");
-        if (data) {
-            console.log('Scanned QR code:', data);
-            alert(`Scanned QR code: ${data}`);
-        }
+import React, {
+    useState
+  } from "react";
+  import QrReader from "react-web-qr-reader";
+  
+  const Example = () => {
+    const delay = 500;
+  
+    const previewStyle = {
+      height: 240,
+      width: 320
     };
-
-    const handleError = (err) => {
-        console.error(err);
+  
+    const [result, setResult] = useState("No result");
+  
+    const handleScan = (result) => {
+      if (result) {
+        alert(result);
+        // setResult(result);
+      }
     };
-
+  
+    const handleError = (error) => {
+      console.log(error);
+    };
+  
     return (
-        <div>
-            <h1>QR Code Scanner</h1>
-            <QrScanner
-                delay={300}
-                onError={handleError}
-                onScan={handleScan}
-                style={{ width: '100%' }}
-                constraints={{
-                    facingMode: 'environment',  // Use rear camera for better scanning on mobile
-                    width: { ideal: 1280 },      // Increase width resolution
-                    height: { ideal: 720 },      // Increase height resolution
-                }}
-            />
-        </div>
+      <>
+        <QrReader
+          delay={delay}
+          style={previewStyle}
+          onError={handleError}
+          onScan={handleScan}
+        />
+        <p>{result}</p>
+      </>
     );
-};
-
-export default QrCodeScanner;
+  };
+  
+  export default Example;
