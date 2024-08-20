@@ -1,39 +1,34 @@
-import React, {
-  useState
-} from "react";
-import QrReader from "react-web-qr-reader";
+import React, { useEffect, useRef, useState } from 'react';
+import { BrowserMultiFormatReader } from '@zxing/library';
 
-const Example = () => {
-  const delay = 500;
+const ZxingScanner = () => {
+    const videoRef = useRef(null);
+    const [result, setResult] = useState('');
 
-  const previewStyle = {
-    height: 240,
-    width: 320
-  };
+    useEffect(() => {
+        const codeReader = new BrowserMultiFormatReader();
+        codeReader.decodeFromVideoDevice(null, videoRef.current, (result, err) => {
+            if (result) {
+                setResult(result.text);
+                alert(`Scanned QR code: ${result.text}`);
+            }
+            if (err) {
+                console.error(err);
+            }
+        });
 
-  const [result, setResult] = useState("No result");
+        return () => {
+            codeReader.reset();
+        };
+    }, []);
 
-  const handleScan = (result) => {
-    if (result) {
-      setResult(result);
-    }
-  };
-
-  const handleError = (error) => {
-    console.log(error);
-  };
-
-  return (
-    <>
-      <QrReader
-        delay={delay}
-        style={previewStyle}
-        onError={handleError}
-        onScan={handleScan}
-      />
-      <p>{result}</p>
-    </>
-  );
+    return (
+        <div>
+            <h1>ZXing QR Code Scanner</h1>
+            <video ref={videoRef} style={{ width: '100%' }} />
+            <p>Scanned result: {result}</p>
+        </div>
+    );
 };
 
-export default Example;
+export default ZxingScanner;
