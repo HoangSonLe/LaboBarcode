@@ -1,127 +1,110 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useRef } from 'react';
 import {
-    BrowserQRCodeReader,
-    NotFoundException,
-    ChecksumException,
-    FormatException,
-} from "@zxing/library";
+  BrowserQRCodeReader,
+  NotFoundException,
+  ChecksumException,
+  FormatException
+} from '@zxing/library';
 
-export default function () {
-    const [selectedDeviceId, setSelectedDeviceId] = useState("");
-    const [code, setCode] = useState("");
-    const [videoInputDevices, setVideoInputDevices] = useState([]);
+const QRCodeScanner = () => {
+  const [selectedDeviceId, setSelectedDeviceId] = useState('');
+  const [code, setCode] = useState('');
+  const [videoInputDevices, setVideoInputDevices] = useState([]);
+  const videoRef = useRef(null);
 
-    const codeReader = new BrowserQRCodeReader();
+  const codeReader = new BrowserQRCodeReader();
 
-    console.log("ZXing code reader initialized");
-
-    useEffect(() => {
-        codeReader
-            .getVideoInputDevices()
-            .then((videoInputDevices) => {
-                setupDevices(videoInputDevices);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }, []);
-
-    function setupDevices(videoInputDevices) {
-        const sourceSelect = document.getElementById("sourceSelect");
-
-        // selects first device
-        setSelectedDeviceId(videoInputDevices[0].deviceId);
-
-        // setup devices dropdown
-        if (videoInputDevices.length >= 1) {
-            setVideoInputDevices(videoInputDevices);
+  useEffect(() => {
+    const fetchDevices = async () => {
+      try {
+        const devices = await codeReader.getVideoInputDevices();
+        setVideoInputDevices(devices);
+        if (devices.length > 0) {
+          setSelectedDeviceId(devices[0].deviceId);
         }
-    }
+      } catch (error) {
+        console.error('Error fetching devices:', error);
+      }
+    };
 
-    function resetClick() {
-        codeReader.reset();
-        setCode("");
-        console.log("Reset.");
-    }
+    fetchDevices();
 
-    function decodeContinuously(selectedDeviceId) {
-        codeReader.decodeFromInputVideoDeviceContinuously(
-            selectedDeviceId,
-            "video",
-            (result, err) => {
-                if (result) {
-                    // properly decoded qr code
-                    console.log("Found QR code!", result);
-                    setCode(result.text);
-                }
+    return () => {
+      codeReader.reset();
+    };
+  }, [codeReader]);
 
-                if (err) {
-                    setCode("");
+  useEffect(() => {
+    if (!selectedDeviceId || !videoRef.current) return;
 
-                    // As long as this error belongs into one of the following categories
-                    // the code reader is going to continue as excepted. Any other error
-                    // will stop the decoding loop.
-                    //
-                    // Excepted Exceptions:
-                    //
-                    //  - NotFoundException
-                    //  - ChecksumException
-                    //  - FormatException
+    const decodeContinuously = async () => {
+      try {
+        await codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, videoRef.current, (result, err) => {
+          if (result) {
+            setCode(result.text);
+            console.log('Found QR code!', result);
+          }
 
-                    if (err instanceof NotFoundException) {
-                        console.log("No QR code found.");
-                    }
-
-                    if (err instanceof ChecksumException) {
-                        console.log("A code was found, but it's read value was not valid.");
-                    }
-
-                    if (err instanceof FormatException) {
-                        console.log("A code was found, but it was in a invalid format.");
-                    }
-                }
+          if (err) {
+            setCode('');
+            if (err instanceof NotFoundException) {
+              console.log('No QR code found.');
+            } else if (err instanceof ChecksumException) {
+              console.log('A code was found, but its value was not valid.');
+            } else if (err instanceof FormatException) {
+              console.log('A code was found, but it was in an invalid format.');
             }
-        );
-    }
+          }
+        });
+      } catch (error) {
+        console.error('Error starting continuous decoding:', error);
+      }
+    };
 
-    useEffect(
-        (deviceId) => {
-            decodeContinuously(selectedDeviceId);
-            console.log(`Started decode from camera with id ${selectedDeviceId}`);
-        },
-        [selectedDeviceId]
-    );
+    decodeContinuously();
 
-    return (
-        <main class="wrapper">
-            <section className="container" id="demo-content">
-                <div id="sourceSelectPanel">
-                    <label for="sourceSelect">Change video source:</label>
-                    <select
-                        id="sourceSelect"
-                        onChange={() => setSelectedDeviceId(sourceSelect.value)}
-                    >
-                        {videoInputDevices.map((element) => (
-                            <option value={element.deviceId}>{element.label}</option>
-                        ))}
-                    </select>
-                </div>
+    return () => {
+      codeReader.reset();
+    };
+  }, [selectedDeviceId, codeReader]);
 
-                <div>
-                    <video id="video" width="300" height="200" />
-                </div>
+  const resetClick = () => {
+    codeReader.reset();
+    setCode('');
+    console.log('Reset.');
+  };
 
-                <label>Result:</label>
-                <pre>
-                    <code id="result">{code}</code>
-                </pre>
+  return (
+    <main className="wrapper">
+      <section className="container" id="demo-content">
+        <div id="sourceSelectPanel">
+          <label htmlFor="sourceSelect">Change video source:</label>
+          <select
+            id="sourceSelect"
+            value={selectedDeviceId}
+            onChange={(e) => setSelectedDeviceId(e.target.value)}
+          >
+            {videoInputDevices.map((device) => (
+              <option key={device.deviceId} value={device.deviceId}>
+                {device.label || `Device ${device.deviceId}`}
+              </option>
+            ))}
+          </select>
+        </div>
 
-                <button id="resetButton" onClick={() => resetClick()}>
-                    Reset
-                </button>
-            </section>
-        </main>
-    );
-}
-0;
+        <div>
+          <video ref={videoRef} width="300" height="200" />
+        </div>
+
+        <label>Result:</label>
+        <pre>
+          <code>{code}</code>
+        </pre>
+
+        <button onClick={resetClick}>Reset</button>
+      </section>
+    </main>
+  );
+};
+
+export default QRCodeScanner;
