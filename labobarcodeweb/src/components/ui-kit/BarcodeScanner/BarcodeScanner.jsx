@@ -1,53 +1,75 @@
-import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
-import { IconButton } from "@mui/material";
-import { useEffect, useState } from "react";
-import BarcodeReader from "react-barcode-reader";
+import React, { useEffect, useRef, useState } from 'react';
+import Quagga from 'quagga'; // Import QuaggaJS
 
 const BarcodeScannerComponent = () => {
     const [scanning, setScanning] = useState(false);
-    const [hasCameraAccess, setHasCameraAccess] = useState(false);
-    const [cameraError, setCameraError] = useState(null);
-    const checkCameraAccess = async () => {
-        try {
-            await navigator.mediaDevices.getUserMedia({ video: true });
-            setHasCameraAccess(true);
-        } catch (error) {
-            setCameraError("Camera access denied. Please enable camera permissions.");
-        }
-    };
+    const scannerRef = useRef(null);
+
     useEffect(() => {
-        // Check for camera access permission
-        checkCameraAccess();
-    }, []);
-    const handleScan = (data) => {
-        alert(data);
-        console.log("Barcode data:", data);
-        setScanning(false); // Stop scanning after a successful read
+        if (scanning && scannerRef.current) {
+            // Start the scanner after the element is rendered and available
+            Quagga.init({
+                inputStream: {
+                    type: 'LiveStream',
+                    target: scannerRef.current, // The container element for the camera feed
+                    constraints: {
+                        width: 640,
+                        height: 480,
+                        facingMode: 'environment', // Use the rear camera
+                    },
+                },
+                decoder: {
+                    readers: ['code_128_reader', 'ean_reader'], // Add barcode formats you want to scan
+                },
+            }, (err) => {
+                if (err) {
+                    console.error('QuaggaJS initialization failed:', err);
+                    return;
+                }
+                Quagga.start(); // Start the camera and scanner
+            });
+
+            Quagga.onDetected(handleBarcodeDetected);
+
+            return () => {
+                // Stop and clean up when component unmounts or scanning stops
+                Quagga.stop();
+                Quagga.offDetected(handleBarcodeDetected);
+            };
+        }
+    }, [scanning]);
+
+    const handleBarcodeDetected = (result) => {
+        if (result && result.codeResult && result.codeResult.code) {
+            alert(`Barcode detected: ${result.codeResult.code}`);
+            console.log('Barcode detected:', result.codeResult.code);
+            setScanning(false); // Stop scanning after a successful detection
+        }
     };
 
-    const handleError = (err) => {
-        alert(err);
-        console.error("Barcode error:", err);
-        setScanning(false); // Stop scanning on error
+    const startScanner = () => {
+        setScanning(true);
     };
-    const openBarcodeScanner = () => {
-        if (hasCameraAccess) {
-            setScanning(true);
-        } else {
-            checkCameraAccess();
-        }
+
+    const stopScanner = () => {
+        setScanning(false);
     };
+
     return (
         <>
-            <IconButton onClick={openBarcodeScanner}>
-                <QrCodeScannerIcon fontSize="large" />
-            </IconButton>
+            <button onClick={startScanner}>Start Scanning</button>
             {scanning && (
-                <BarcodeReader
-                    onScan={handleScan}
-                    onError={handleError}
-                    onKeyPress={() => {}} // Optional: to avoid default keypress behavior
-                />
+                <div
+                    ref={scannerRef}
+                    style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'hidden',
+                    }}
+                >
+                    {/* Camera feed will be displayed here */}
+                </div>
             )}
         </>
     );

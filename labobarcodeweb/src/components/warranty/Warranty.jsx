@@ -2,20 +2,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import { LoadingButton } from "@mui/lab";
 import {
     CircularProgress,
-    IconButton,
     InputAdornment,
     OutlinedInput,
-    TextField,
-    Typography,
+    Typography
 } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";
 import { getWarrantyByCode } from "../../apis/warranty.api";
-import styles from "./Warranty.module.css";
-import BarcodeScanner from "../ui-kit/BarcodeScanner/BarcodeScanner";
 import BarcodeScannerComponent from "../ui-kit/BarcodeScanner/BarcodeScanner";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import styles from "./Warranty.module.css";
 const Warranty = () => {
     const [cardNumber, setCardNumber] = useState("");
     const queryClient = useQueryClient();
@@ -174,46 +170,50 @@ const Warranty = () => {
                 </div>
                 <div className={clsx(styles.subContentTable)}>
                     <table>
-                        <tr>
-                            <th>Sản phẩm</th>
-                            <th>Thời gian bảo hành</th>
-                        </tr>
-                        <tr>
-                            <td>VITA</td>
-                            <td>7 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>Cercon</td>
-                            <td>7 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>DDBIO</td>
-                            <td>10 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>Venus</td>
-                            <td>10 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>Ceramill Zolid</td>
-                            <td>10 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>HT Smile</td>
-                            <td>10 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>Emax</td>
-                            <td>10 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>Everest</td>
-                            <td>10 Năm</td>
-                        </tr>
-                        <tr>
-                            <td>Lava</td>
-                            <td>15 Năm</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Thời gian bảo hành</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>VITA</td>
+                                <td>7 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>Cercon</td>
+                                <td>7 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>DDBIO</td>
+                                <td>10 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>Venus</td>
+                                <td>10 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>Ceramill Zolid</td>
+                                <td>10 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>HT Smile</td>
+                                <td>10 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>Emax</td>
+                                <td>10 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>Everest</td>
+                                <td>10 Năm</td>
+                            </tr>
+                            <tr>
+                                <td>Lava</td>
+                                <td>15 Năm</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div className={clsx(styles.subtitle)}>Một Số Lưu Ý Khi Sử Dụng Phục Hình Sứ:</div>
