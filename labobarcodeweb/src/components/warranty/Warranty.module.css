@@ -154,6 +154,7 @@
     }
     .subContentContainer {
         max-width: unset;
+        margin: 2rem 0;
     }
     .subContentTable {
         padding: 0;

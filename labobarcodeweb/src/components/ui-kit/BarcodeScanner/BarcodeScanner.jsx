@@ -1,11 +1,24 @@
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { IconButton } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BarcodeReader from "react-barcode-reader";
 
 const BarcodeScannerComponent = () => {
     const [scanning, setScanning] = useState(false);
-
+    const [hasCameraAccess, setHasCameraAccess] = useState(false);
+    const [cameraError, setCameraError] = useState(null);
+    const checkCameraAccess = async () => {
+        try {
+            await navigator.mediaDevices.getUserMedia({ video: true });
+            setHasCameraAccess(true);
+        } catch (error) {
+            setCameraError("Camera access denied. Please enable camera permissions.");
+        }
+    };
+    useEffect(() => {
+        // Check for camera access permission
+        checkCameraAccess();
+    }, []);
     const handleScan = (data) => {
         alert(data);
         console.log("Barcode data:", data);
@@ -17,10 +30,16 @@ const BarcodeScannerComponent = () => {
         console.error("Barcode error:", err);
         setScanning(false); // Stop scanning on error
     };
-
+    const openBarcodeScanner = () => {
+        if (hasCameraAccess) {
+            setScanning(true);
+        } else {
+            checkCameraAccess();
+        }
+    };
     return (
         <>
-            <IconButton onClick={() => setScanning(true)}>
+            <IconButton onClick={openBarcodeScanner}>
                 <QrCodeScannerIcon fontSize="large" />
             </IconButton>
             {scanning && (
