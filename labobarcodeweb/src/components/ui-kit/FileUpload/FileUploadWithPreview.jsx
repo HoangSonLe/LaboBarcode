@@ -6,11 +6,11 @@ import styles from "./FileUploadWithPreview.module.css";
 
 const FileUploadWithPreview = memo(
     ({ selectedFiles = [], existingImages = [], setSelectedFiles }) => {
-        // const [previews, setPreviews] = useState([]);
         const [allPreviews, setAllPreviews] = useState([]);
         const [open, setOpen] = useState(false);
         const [selectedImage, setSelectedImage] = useState(null);
 
+        // Handle file input change
         const handleFileChange = (event) => {
             const files = Array.from(event.target.files);
             setSelectedFiles(files);
@@ -24,7 +24,6 @@ const FileUploadWithPreview = memo(
                         const reader = new FileReader();
                         return new Promise((resolve) => {
                             reader.onloadend = () => {
-                                console.log(reader);
                                 resolve(reader.result);
                             };
                             reader.readAsDataURL(file);
@@ -50,13 +49,14 @@ const FileUploadWithPreview = memo(
                 // return [...existFilePreviews, ...filePreviews];
                 return filePreviews;
             };
-
-            // Combine existing images with new file previews
+        // Load previews on selectedFiles or existingImages change
             const loadPreviews = async () => {
                 const newPreviews = await getFilePreviews();
                 setAllPreviews((prev) => {
-                    // Update state only if there's a change
-                    const combinedPreviews = [...existingImages, ...newPreviews];
+                    const combinedPreviews = [
+                        ...existingImages, // Ensure this is a valid URL string
+                        ...newPreviews
+                    ];
                     if (JSON.stringify(combinedPreviews) !== JSON.stringify(prev)) {
                         return combinedPreviews;
                     }
@@ -67,15 +67,18 @@ const FileUploadWithPreview = memo(
             loadPreviews();
         }, [selectedFiles, existingImages]);
 
+        // Open image dialog
         const handleImageClick = (image) => {
             setSelectedImage(image);
             setOpen(true);
         };
 
+        // Close image dialog
         const handleClose = () => {
             setOpen(false);
         };
 
+        // Open file input dialog
         const handleTextFieldClick = () => {
             document.getElementById("file-input").click();
         };
@@ -107,7 +110,7 @@ const FileUploadWithPreview = memo(
                         <SliderImage
                             imageSourceList={allPreviews}
                             handleImageClick={handleImageClick}
-                        ></SliderImage>
+                        />
                     </Box>
                 )}
 

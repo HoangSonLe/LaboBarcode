@@ -17,6 +17,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
         expirationDate: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
         imageSrcList: [],
         imageSrcPreviewList: [],
+        imageLinkNameSrcPreviewList: [],
         labName: "",
         patientName: "",
         patientPhoneNumber: "",
@@ -228,13 +229,13 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
-                        <FileUploadWithPreview
+                    <FileUploadWithPreview
                             selectedFiles={formData.imageSrcList}
                             existingImages={(formData.imageSrcPreviewList ?? []).map((i) => i.src)}
                             setSelectedFiles={(selectedFiles) =>
                                 setFormData((prev) => ({
                                     ...prev,
-                                    imageSrcList: selectedFiles,
+                                    imageSrcList: selectedFiles
                                 }))
                             }
                         />
