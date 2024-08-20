@@ -49,13 +49,13 @@ const FileUploadWithPreview = memo(
                 // return [...existFilePreviews, ...filePreviews];
                 return filePreviews;
             };
-        // Load previews on selectedFiles or existingImages change
+            // Load previews on selectedFiles or existingImages change
             const loadPreviews = async () => {
                 const newPreviews = await getFilePreviews();
                 setAllPreviews((prev) => {
                     const combinedPreviews = [
-                        ...existingImages, // Ensure this is a valid URL string
-                        ...newPreviews
+                        ...existingImages.map((i) => i.src), // Ensure this is a valid URL string
+                        ...newPreviews,
                     ];
                     if (JSON.stringify(combinedPreviews) !== JSON.stringify(prev)) {
                         return combinedPreviews;
@@ -110,6 +110,7 @@ const FileUploadWithPreview = memo(
                         <SliderImage
                             imageSourceList={allPreviews}
                             handleImageClick={handleImageClick}
+                            onClickRemoveImage={(index) => console.log(index)}
                         />
                     </Box>
                 )}

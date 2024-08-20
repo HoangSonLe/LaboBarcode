@@ -87,6 +87,11 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                         });
                     }
                     break;
+                case "imageSrcPreviewList":
+                    if (formData[key] !== null && formData[key] !== undefined) {
+                        postData.append(key, JSON.stringify(formData[key])); // e.g., file0, file1, etc.
+                    }
+                    break;
                 default:
                     postData.append(key, formData[key]);
                     break;
@@ -229,13 +234,13 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
-                    <FileUploadWithPreview
+                        <FileUploadWithPreview
                             selectedFiles={formData.imageSrcList}
-                            existingImages={(formData.imageSrcPreviewList ?? []).map((i) => i.src)}
+                            existingImages={formData.imageSrcPreviewList ?? []}
                             setSelectedFiles={(selectedFiles) =>
                                 setFormData((prev) => ({
                                     ...prev,
-                                    imageSrcList: selectedFiles
+                                    imageSrcList: selectedFiles,
                                 }))
                             }
                         />
