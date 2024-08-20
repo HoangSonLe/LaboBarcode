@@ -38,7 +38,8 @@
 }
 .textFieldForm {
     margin: 1rem 0 !important;
-    width: 20rem;
+    width: 80%;
+    max-width: 20rem;
 }
 .buttonForm {
     composes: primaryButton from "../globals/global.module.css";

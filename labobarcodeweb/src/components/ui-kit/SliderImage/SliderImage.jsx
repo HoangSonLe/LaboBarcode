@@ -46,21 +46,20 @@ export default function SliderImage({ imageSourceList, handleImageClick, onClick
                         onClick={() => handleImageClick(preview)}
                         alt={`Selected File ${index + 1}`}
                     />
-                    {/* <IconButton
+                    <IconButton
                         style={{
                             position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            color: "white",
-                            backgroundColor: "rgba(0, 0, 0, 0.5)",
+                            top: "0px",
+                            right: "0px",
+                            color: "rgba(0, 0, 0, 0.7)",
                         }}
                         onClick={(e) => {
                             e.stopPropagation();
                             onClickRemoveImage(index);
                         }}
                     >
-                        <HighlightOffIcon />
-                    </IconButton> */}
+                        <HighlightOffIcon fontSize="large" />
+                    </IconButton>
                 </div>
             ))}
         </Slider>

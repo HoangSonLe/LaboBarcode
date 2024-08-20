@@ -3,6 +3,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    position: relative;
 }
 .imageContainer img {
     max-width: 100%;

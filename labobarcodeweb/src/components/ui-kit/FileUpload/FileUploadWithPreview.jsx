@@ -5,7 +5,7 @@ import SliderImage from "../SliderImage/SliderImage";
 import styles from "./FileUploadWithPreview.module.css";
 
 const FileUploadWithPreview = memo(
-    ({ selectedFiles = [], existingImages = [], setSelectedFiles }) => {
+    ({ selectedFiles = [], existingImages = [], setSelectedFiles, setExistingImages }) => {
         const [allPreviews, setAllPreviews] = useState([]);
         const [open, setOpen] = useState(false);
         const [selectedImage, setSelectedImage] = useState(null);
@@ -30,23 +30,6 @@ const FileUploadWithPreview = memo(
                         });
                     })
                 );
-                // const existFilePreviews = await Promise.all(
-                //     existingImages.map(async (file) => {
-                //         const response = await fetch(file.src);
-                //         const blob = await response.blob();
-                //         const reader = new FileReader();
-                //         return new Promise((resolve) => {
-                //             reader.onloadend = () => {
-                //                 resolve({
-                //                     fileName: file.title,
-                //                     fileUrl: reader.result
-                //                 });
-                //             };
-                //             reader.readAsDataURL(blob);
-                //         });
-                //     })
-                // );
-                // return [...existFilePreviews, ...filePreviews];
                 return filePreviews;
             };
             // Load previews on selectedFiles or existingImages change
@@ -82,7 +65,14 @@ const FileUploadWithPreview = memo(
         const handleTextFieldClick = () => {
             document.getElementById("file-input").click();
         };
-        console.log(allPreviews);
+        const handleRemoveImage = (index) => {
+            if (index + 1 <= existingImages.length) {
+                setExistingImages(existingImages.filter((_, i) => i !== index));
+            } else {
+                index = index - existingImages.length;
+                setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
+            }
+        };
         return (
             <Box>
                 <input
@@ -110,7 +100,7 @@ const FileUploadWithPreview = memo(
                         <SliderImage
                             imageSourceList={allPreviews}
                             handleImageClick={handleImageClick}
-                            onClickRemoveImage={(index) => console.log(index)}
+                            onClickRemoveImage={handleRemoveImage}
                         />
                     </Box>
                 )}

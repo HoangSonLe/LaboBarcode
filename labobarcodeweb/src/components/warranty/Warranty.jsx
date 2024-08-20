@@ -1,12 +1,21 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { LoadingButton } from "@mui/lab";
-import { CircularProgress, TextField, Typography } from "@mui/material";
+import {
+    CircularProgress,
+    IconButton,
+    InputAdornment,
+    OutlinedInput,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";
 import { getWarrantyByCode } from "../../apis/warranty.api";
 import styles from "./Warranty.module.css";
-
+import BarcodeScanner from "../ui-kit/BarcodeScanner/BarcodeScanner";
+import BarcodeScannerComponent from "../ui-kit/BarcodeScanner/BarcodeScanner";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 const Warranty = () => {
     const [cardNumber, setCardNumber] = useState("");
     const queryClient = useQueryClient();
@@ -30,7 +39,7 @@ const Warranty = () => {
                     <div className={clsx(styles.formTitle)}>
                         Please put code number on your card to check warranty infomation:
                     </div>
-                    <TextField
+                    <OutlinedInput
                         className={clsx(styles.textFieldForm)}
                         id="outlined-basic"
                         placeholder="Nhập mã bảo hành"
@@ -38,6 +47,11 @@ const Warranty = () => {
                         InputLabelProps={{
                             shrink: false,
                         }}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <BarcodeScannerComponent />
+                            </InputAdornment>
+                        }
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
                     />
