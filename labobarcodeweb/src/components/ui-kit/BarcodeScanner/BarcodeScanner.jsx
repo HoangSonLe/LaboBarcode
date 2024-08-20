@@ -22,6 +22,11 @@ const QrCodeScanner = () => {
                 onError={handleError}
                 onScan={handleScan}
                 style={{ width: '100%' }}
+                constraints={{
+                    facingMode: 'environment',  // Use rear camera for better scanning on mobile
+                    width: { ideal: 1280 },      // Increase width resolution
+                    height: { ideal: 720 },      // Increase height resolution
+                }}
             />
         </div>
     );
