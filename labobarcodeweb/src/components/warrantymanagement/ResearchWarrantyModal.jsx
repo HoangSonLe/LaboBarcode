@@ -120,7 +120,7 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                                 <div className={styles.productContainer}>
                                     <div className={styles.imageDiv}>
                                         <AutoFadeCarousel
-                                            imageSrcList={data.data.data.imageSrcList ?? []}
+                                            imageSrcList={data.data.data.fileWithSrcList ?? []}
                                         />
                                     </div>
                                     <div className={styles.productInfor}>

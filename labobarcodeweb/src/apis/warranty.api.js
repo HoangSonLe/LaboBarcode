@@ -15,7 +15,15 @@ export const createWarranty = (data) =>
         },
     });
 
-export const updateWarranty = (data) => http.put(`/warranty`, data);
+export const updateWarranty = (warrantyId, data) => {
+    console.log(JSON.stringify(data));
+
+    return http.put(`/warranty/update/${warrantyId}`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data", // Override Content-Type for this request
+        },
+    });
+};
 
 export const deleteWarranty = (id) => http.delete(`warranty/${id}`);
 export const deleteWarranties = (idList) =>

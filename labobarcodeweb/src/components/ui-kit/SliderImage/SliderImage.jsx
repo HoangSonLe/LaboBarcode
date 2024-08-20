@@ -1,18 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { TextField, Box, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import clsx from "clsx";
 import Slider from "react-slick";
 import styles from "./SliderImage.module.css";
-import clsx from "clsx";
-const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow style={styles.arrow} />,
-};
+
 function SampleNextArrow(props) {
     const { className, style, onClick } = props;
     return (
@@ -35,6 +24,18 @@ function SamplePrevArrow(props) {
     );
 }
 export default function SliderImage({ imageSourceList, handleImageClick }) {
+    const sliderSettings = {
+        infinite: false,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: imageSourceList.length > 1,
+        dots: imageSourceList.length > 1,
+        nextArrow: <SampleNextArrow />,
+        prevArrow: <SamplePrevArrow />,
+        centerMode: false, // Disable centering mode
+        variableWidth: false, // Disable variable width, which could cause additional slides
+    };
     return (
         <Slider {...sliderSettings}>
             {imageSourceList.map((preview, index) => (

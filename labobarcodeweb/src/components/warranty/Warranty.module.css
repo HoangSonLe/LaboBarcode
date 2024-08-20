@@ -1,3 +1,5 @@
+@import "../globals/variables.css";
+@import "../globals/global.module.css";
 .container {
     display: flex;
     flex-direction: column;
@@ -39,7 +41,8 @@
     width: 20rem;
 }
 .buttonForm {
-    background: #148f96 0% 0% no-repeat padding-box !important;
+    composes: primaryButton from "../globals/global.module.css";
+    /* background: var(--primary-color) 0% 0% no-repeat padding-box !important; */
 }
 
 .tableCard {
@@ -116,19 +119,19 @@
     border-radius: 10px;
     max-width: 65%;
 }
-.subtitle{
+.subtitle {
     font-size: 1rem;
     font-weight: 600;
-    color: #0D5D70;
+    color: #0d5d70;
     text-decoration: underline;
 }
-.subContent{
+.subContent {
     font-size: 1rem;
     color: black;
     line-height: 1.5rem;
     padding: 1rem 2rem;
 }
-.subContentTable{
+.subContentTable {
     padding: 0 2rem;
 }
 .subContentTable table th,
@@ -136,11 +139,11 @@
     padding: 1rem;
     text-align: left;
 }
-.subContentTable table th{
-    font-weight:bold ;
-    color: #0D5D70;
+.subContentTable table th {
+    font-weight: bold;
+    color: #0d5d70;
 }
-.subContentTable table td{
+.subContentTable table td {
     color: #d11752;
     font-weight: 400;
 }
@@ -148,10 +151,10 @@
     .tableCard {
         min-width: none;
     }
-    .subContentContainer{
+    .subContentContainer {
         max-width: unset;
     }
-    .subContentTable{
+    .subContentTable {
         padding: 0;
     }
 }

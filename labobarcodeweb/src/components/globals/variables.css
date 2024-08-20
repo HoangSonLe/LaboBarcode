@@ -1,7 +1,15 @@
 :root {
-    --primary-color: #6200ee;
-    --secondary-color: #03dac6;
-    --font-size-large: 24px;
-    --font-size-medium: 16px;
+    --primary-color: #148F96 ;
+    --dark-primary-color: #146468 ;
+    --secondary-color: #1C4485;
+    --light-secondary-color: #0076BB;
+    --white-color: #ffffff;
+    --dark-white-color: #DDDFE2;
+
+    --red-color: #F92F2F ;
+    --dark-red-color: #D93630 ;
+    --light-red-color: #f5b3b0 ;
+    --light-green-color: #7be7c6 ;
+    --dark-green-color: #19d2cb ;
   }
   

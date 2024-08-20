@@ -41,6 +41,7 @@ import { deleteWarranties, deleteWarranty, getWarranties } from "../../apis/warr
 import AddOrEditWarrantyModal from "./AddOrEditWarrantyModal";
 import ResearchWarrantyModal from "./ResearchWarrantyModal";
 import styles from "./WarrantyManagement.module.css";
+import "../globals/variables.css";
 
 const headCells = [
     {
@@ -278,6 +279,7 @@ export default function WarrantyTable({ tableData }) {
         setSelected(newSelected);
     };
     const handleChangePage = (event, newPage) => {
+        setSelected([]);
         setPage(newPage);
     };
 
@@ -286,6 +288,7 @@ export default function WarrantyTable({ tableData }) {
         setPage(0);
     };
     const onClickSearch = () => {
+        setPage(0)
         refetch();
     };
     const onClickClearSearch = () => {
@@ -298,9 +301,9 @@ export default function WarrantyTable({ tableData }) {
     let currentTotal = !data ? 0 : data.data.data.length;
     let numSelected = selected.length;
     const emptyRows = page > 0 ? Math.max(0, Math.abs(rowsPerPage - data?.data?.data.length)) : 0;
-    console.log(currentTotal);
-    // console.log(emptyRows, page);
-    // console.log(data?.data?.total, rowsPerPage, (1 + page) * rowsPerPage - data?.data?.total, page);
+    // console.log(currentTotal);
+    console.log(emptyRows, page);
+    console.log(data?.data?.total, rowsPerPage, (1 + page) * rowsPerPage - data?.data?.total, page);
     return (
         <Box
             sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -367,32 +370,19 @@ export default function WarrantyTable({ tableData }) {
                             </Select>
                         </FormControl>
                         <Button
+                            size="small"
                             onClick={onClickClearSearch}
                             variant="outlined"
+                            className={clsx(styles.outlinedButton)}
                             startIcon={<CleaningServicesIcon />}
-                            sx={{
-                                backgroundColor: "rgba(98, 0, 238, 0.1)", // Set the background color
-                                borderColor: "purple", // Change border color if needed
-                                color: "purple", // Change text color if needed
-                                "&:hover": {
-                                    backgroundColor: "rgba(98, 0, 238, 0.2)", // Change background on hover
-                                    borderColor: "purple",
-                                },
-                            }}
                         >
                             Xóa bộ lộc
                         </Button>
                         <LoadingButton
+                            size="small"
                             onClick={onClickSearch}
                             variant="contained"
-                            sx={{
-                                marginRight: "5px",
-                                backgroundColor: "green", // Default background color
-                                color: "white", // Text color
-                                "&:hover": {
-                                    backgroundColor: "darkgreen", // Color on hover
-                                },
-                            }}
+                            className={clsx(styles.button)}
                             loading={isLoading}
                             loadingPosition="start"
                             startIcon={<SearchIcon />}
@@ -400,19 +390,13 @@ export default function WarrantyTable({ tableData }) {
                             Tìm kiếm
                         </LoadingButton>
                         <Button
-                            onClick={openSearchCardModal}
+                            size="small"
                             variant="contained"
-                            sx={{
-                                marginRight: "5px",
-                                backgroundColor: "green", // Default background color
-                                color: "white", // Text color
-                                "&:hover": {
-                                    backgroundColor: "darkgreen", // Color on hover
-                                },
-                            }}
+                            className={clsx(styles.secondaryButton)}
+                            onClick={openSearchCardModal}
                             startIcon={<ContentPasteSearchIcon />}
                         >
-                            Tra mã bảo hành
+                            Tra mã BH
                         </Button>
                     </Stack>
                     {searchCardNumberModalProps && (
@@ -435,13 +419,15 @@ export default function WarrantyTable({ tableData }) {
                                     <Checkbox
                                         sx={{
                                             "&.Mui-checked": {
-                                                color: "#19d2cb", // Color when checked
+                                                color: "var(--light-green-color)", // Color when checked
                                             },
                                             "&.MuiCheckbox-indeterminate": {
-                                                color: "#19d2cb", // Color when checked
+                                                color: "var(--light-green-color)", // Color when checked
                                             },
                                         }}
-                                        indeterminate={numSelected > 0 && numSelected < currentTotal}
+                                        indeterminate={
+                                            numSelected > 0 && numSelected < currentTotal
+                                        }
                                         checked={currentTotal > 0 && numSelected === currentTotal}
                                         onChange={handleSelectAllClick}
                                         inputProps={{
@@ -519,10 +505,7 @@ export default function WarrantyTable({ tableData }) {
                                                 }}
                                                 sx={{
                                                     "&.Mui-checked": {
-                                                        color: "#19d2cb", // Color when checked
-                                                    },
-                                                    "&.MuiCheckbox-indeterminate": {
-                                                        color: "#19d2cb", // Color when checked
+                                                        color: "var(--dark-green-color)", // Color when checked
                                                     },
                                                 }}
                                             />
@@ -644,14 +627,7 @@ export default function WarrantyTable({ tableData }) {
                                     size="small"
                                     onClick={openAddOrEditModal}
                                     variant="contained"
-                                    sx={{
-                                        marginRight: "5px",
-                                        backgroundColor: "green", // Default background color
-                                        color: "white", // Text color
-                                        "&:hover": {
-                                            backgroundColor: "darkgreen", // Color on hover
-                                        },
-                                    }}
+                                    className={clsx(styles.button)}
                                     startIcon={<AddCircleIcon />}
                                 >
                                     Thêm mới
@@ -662,14 +638,7 @@ export default function WarrantyTable({ tableData }) {
                                     size="small"
                                     onClick={openAddOrEditModal}
                                     variant="contained"
-                                    sx={{
-                                        marginRight: "5px",
-                                        backgroundColor: "green", // Default background color
-                                        color: "white", // Text color
-                                        "&:hover": {
-                                            backgroundColor: "darkgreen", // Color on hover
-                                        },
-                                    }}
+                                    className={clsx(styles.button)}
                                     startIcon={<BorderColorIcon />}
                                 >
                                     Chỉnh sửa
@@ -678,13 +647,7 @@ export default function WarrantyTable({ tableData }) {
                             {numSelected > 0 ? (
                                 <Button
                                     size="small"
-                                    sx={{
-                                        backgroundColor: "green", // Default background color
-                                        color: "white", // Text color
-                                        "&:hover": {
-                                            backgroundColor: "darkgreen", // Color on hover
-                                        },
-                                    }}
+                                    className={clsx(styles.redoutlinedButton)}
                                     onClick={handleOnDelete}
                                     variant="outlined"
                                     startIcon={<DeleteIcon />}

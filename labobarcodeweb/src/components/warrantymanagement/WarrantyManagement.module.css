@@ -1,3 +1,5 @@
+@import "../globals/variables.css";
+@import "../globals/global.module.css";
 .container {
     display: flex;
     flex-direction: column;
@@ -21,4 +23,21 @@
     color: white !important;
     background: #178091 0% 0% no-repeat padding-box !important;
     text-align: center !important;
+}
+.button {
+    composes: primaryButton from "../globals/global.module.css";
+    margin-right: 5px;
+    /* background: var(--primary-color) 0% 0% no-repeat padding-box !important; */
+}
+.secondaryButton {
+    composes: secondaryButton from "../globals/global.module.css";
+    margin-right: 5px;
+    /* background: var(--primary-color) 0% 0% no-repeat padding-box !important; */
+}
+
+.outlinedButton {
+    composes: primaryOutlinedButton from "../globals/global.module.css";
+}
+.redoutlinedButton {
+    composes: redOutlinedButton from "../globals/global.module.css";
 }

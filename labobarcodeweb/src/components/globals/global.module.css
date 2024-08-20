@@ -1,0 +1,55 @@
+@import "./variables.css";
+.buttonBase {
+    cursor: pointer;
+    min-width: 7rem !important;
+    color: white !important;
+    margin: 4px 4px !important;
+}
+.primaryButton {
+    composes: buttonBase;
+    background: var(--primary-color) 0% 0% no-repeat padding-box !important;
+    &:hover {
+        background: var(--dark-primary-color) 0% 0% no-repeat padding-box !important;
+        color: white;
+    }
+}
+.secondaryButton {
+    composes: buttonBase;
+    background: var(--secondary-color) 0% 0% no-repeat padding-box !important;
+    &:hover {
+        background: var(--light-secondary-color) 0% 0% no-repeat padding-box !important;
+        color: white;
+    }
+}
+.primaryOutlinedButton {
+    composes: buttonBase;
+    background: var(--white-color) 0% 0% no-repeat padding-box !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    &:hover {
+        background: var(--dark-white-color) 0% 0% no-repeat padding-box !important;
+        color: var(--primary-color) !important;
+        border-color: var(--dark-primary-color-primary-color) !important;
+        cursor: pointer;
+    }
+}
+
+.redButton {
+    composes: buttonBase;
+    background: var(--red-color) 0% 0% no-repeat padding-box !important;
+    &:hover {
+        background: var(--dark-red-color) 0% 0% no-repeat padding-box !important;
+        color: white;
+    }
+}
+.redOutlinedButton {
+    composes: buttonBase;
+    background: var(--white-color) 0% 0% no-repeat padding-box !important;
+    color: var(--red-color) !important;
+    border-color: var(--red-color) !important;
+    &:hover {
+        background: var(--light-red-color) 0% 0% no-repeat padding-box !important;
+        color: var(--red-color) !important;
+        border-color: var(--dark-red-color-primary-color) !important;
+    }
+}

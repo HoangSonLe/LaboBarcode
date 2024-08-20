@@ -41,7 +41,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
     });
 
     const createOrEditWarrantyMutation = useMutation({
-        mutationFn: (data) => (data.id == null ? createWarranty(data) : updateWarranty(data)),
+        mutationFn: (data) => (!id ? createWarranty(data) : updateWarranty(id, data)),
         onError: (error) => {
             console.log(error.response?.data?.message);
             // Customize error handling here
@@ -91,6 +91,8 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     break;
             }
         });
+        console.log(JSON.stringify(postData));
+
         createOrEditWarrantyMutation.mutate(postData, {
             onSuccess: () => {
                 callbackCloseModal();
@@ -101,7 +103,6 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
     React.useImperativeHandle(ref, () => ({
         onOpenModal,
     }));
-    console.log(formData);
     return (
         <CustomizedModal
             className={styles.customModal}
@@ -229,7 +230,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <FileUploadWithPreview
                             selectedFiles={formData.imageSrcList}
-                            existingImages={formData.imageSrcPreviewList}
+                            existingImages={(formData.imageSrcPreviewList ?? []).map((i) => i.src)}
                             setSelectedFiles={(selectedFiles) =>
                                 setFormData((prev) => ({
                                     ...prev,

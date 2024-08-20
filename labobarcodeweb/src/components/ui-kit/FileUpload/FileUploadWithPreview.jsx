@@ -24,12 +24,30 @@ const FileUploadWithPreview = memo(
                         const reader = new FileReader();
                         return new Promise((resolve) => {
                             reader.onloadend = () => {
+                                console.log(reader);
                                 resolve(reader.result);
                             };
                             reader.readAsDataURL(file);
                         });
                     })
                 );
+                // const existFilePreviews = await Promise.all(
+                //     existingImages.map(async (file) => {
+                //         const response = await fetch(file.src);
+                //         const blob = await response.blob();
+                //         const reader = new FileReader();
+                //         return new Promise((resolve) => {
+                //             reader.onloadend = () => {
+                //                 resolve({
+                //                     fileName: file.title,
+                //                     fileUrl: reader.result
+                //                 });
+                //             };
+                //             reader.readAsDataURL(blob);
+                //         });
+                //     })
+                // );
+                // return [...existFilePreviews, ...filePreviews];
                 return filePreviews;
             };
 
@@ -61,7 +79,7 @@ const FileUploadWithPreview = memo(
         const handleTextFieldClick = () => {
             document.getElementById("file-input").click();
         };
-
+        console.log(allPreviews);
         return (
             <Box>
                 <input
@@ -77,9 +95,7 @@ const FileUploadWithPreview = memo(
                     variant="outlined"
                     fullWidth
                     value={
-                        allPreviews.length > 0
-                            ? `${allPreviews.length} file(s) đã được chọn`
-                            : ""
+                        allPreviews.length > 0 ? `${allPreviews.length} file(s) đã được chọn` : ""
                     }
                     onClick={handleTextFieldClick}
                     InputProps={{
