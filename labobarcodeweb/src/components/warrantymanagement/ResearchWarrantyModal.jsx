@@ -1,6 +1,6 @@
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { Box, Button, Skeleton, TextField } from "@mui/material";
+import { Box, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import CustomizedModal from "../ui-kit/Modal/Modal";
@@ -136,6 +136,18 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                                     </div>
                                 </div>
                             </Box>
+                        )}
+                        {data?.data && !data.data.data && (
+                            <div className={styles.errorContainer}>
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        color: "#DF0F0F",
+                                    }}
+                                >
+                                    {data.data?.message ?? "Lỗi"}
+                                </Typography>
+                            </div>
                         )}
                     </div>
 
