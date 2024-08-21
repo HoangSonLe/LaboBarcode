@@ -44,25 +44,29 @@ import styles from "./WarrantyManagement.module.css";
 import "../globals/variables.css";
 
 const headCells = [
-    {
-        id: 0,
-        numeric: false,
-        label: "Trạng thái",
-        minWidth: 100,
-        align: "center",
-    },
+    // {
+    //     id: 0,
+    //     numeric: false,
+    //     label: "Trạng thái",
+    //     minWidth: 100,
+    //     align: "center",
+    //     name: "abc"
+    // },
     {
         id: 7,
         numeric: false,
         label: "Mã Code",
         minWidth: 170,
         align: "center",
+           name: "codeNumber"
+
     },
     {
         id: 1,
         numeric: false,
         label: "Tên bệnh nhân",
         minWidth: 170,
+        name: "patientName"
     },
     {
         id: 2,
@@ -70,30 +74,36 @@ const headCells = [
         label: "Số điện thoại",
         minWidth: 170,
         align: "center",
+        name: "patientPhoneNumber"
+     
     },
     {
         id: 3,
         numeric: false,
         label: "Phòng khám",
         minWidth: 170,
+        name: "clinic"
     },
     {
         id: 4,
         numeric: false,
         label: "Phòng LAB",
         minWidth: 170,
+        name: "labName"
     },
     {
         id: 5,
         numeric: false,
         label: "Bác sĩ",
         minWidth: 170,
+        name: "doctor"
     },
     {
         id: 6,
         numeric: false,
         label: "Sản phẩm",
         minWidth: 170,
+                name: "product"
     },
 
     {
@@ -102,6 +112,7 @@ const headCells = [
         label: "Ngày hết hạn",
         minWidth: 170,
         align: "center",
+        name: "expirationDate"
     },
     {
         id: 9,
@@ -109,6 +120,7 @@ const headCells = [
         label: "Ngày cập nhật",
         minWidth: 170,
         align: "center",
+        name: "updated_at"
     },
 ];
 
@@ -186,6 +198,11 @@ export default function WarrantyTable({ tableData }) {
         keepPreviousData: true,
         retry: 3,
     });
+
+    useEffect(() => {
+        // Call refetch whenever `order` or `orderBy` changes
+        refetch();
+    }, [order, orderBy]);
     useEffect(() => {
         if (data?.data?.total > (page + 1) * data?.data?.data.length) {
             queryClient.prefetchQuery({
@@ -446,12 +463,12 @@ export default function WarrantyTable({ tableData }) {
                                         padding="none"
                                     >
                                         <TableSortLabel
-                                            active={orderBy === headCell.id}
-                                            direction={orderBy === headCell.id ? order : "asc"}
-                                            onClick={(e) => handleRequestSort(e, headCell.id)}
+                                            active={orderBy === headCell.name}
+                                            direction={orderBy === headCell.name ? order : "asc"}
+                                            onClick={(e) => handleRequestSort(e, headCell.name)}
                                         >
                                             {headCell.label}
-                                            {orderBy === headCell.id ? (
+                                            {orderBy === headCell.name ? (
                                                 <Box component="span" sx={visuallyHidden}>
                                                     {order === "desc"
                                                         ? "sorted descending"
@@ -510,7 +527,7 @@ export default function WarrantyTable({ tableData }) {
                                                 }}
                                             />
                                         </TableCell>
-                                        <TableCell
+                                        {/* <TableCell
                                             id={labelId}
                                             scope="row"
                                             padding="none"
@@ -522,7 +539,7 @@ export default function WarrantyTable({ tableData }) {
                                             ) : (
                                                 <Chip label="Hết hạn" color="error" />
                                             )}
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell size="small" align="center" padding="none">
                                             {row.codeNumber}
                                         </TableCell>
