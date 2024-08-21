@@ -55,7 +55,7 @@ const headCells = [
     {
         id: 7,
         numeric: false,
-        label: "Mã Code",
+        label: "Code",
         minWidth: 170,
         align: "center",
         name: "codeNumber",
@@ -63,14 +63,14 @@ const headCells = [
     {
         id: 1,
         numeric: false,
-        label: "Tên bệnh nhân",
+        label: "Patient Name",
         minWidth: 170,
         name: "patientName",
     },
     {
         id: 2,
         numeric: false,
-        label: "Số điện thoại",
+        label: "Patient Phone Number",
         minWidth: 170,
         align: "center",
         name: "patientPhoneNumber",
@@ -78,28 +78,28 @@ const headCells = [
     {
         id: 3,
         numeric: false,
-        label: "Phòng khám",
+        label: "Clinic",
         minWidth: 170,
         name: "clinic",
     },
     {
         id: 4,
         numeric: false,
-        label: "Phòng LAB",
+        label: "Lab Name",
         minWidth: 170,
         name: "labName",
     },
     {
         id: 5,
         numeric: false,
-        label: "Bác sĩ",
+        label: "Doctor",
         minWidth: 170,
         name: "doctor",
     },
     {
         id: 6,
         numeric: false,
-        label: "Sản phẩm",
+        label: "Product",
         minWidth: 170,
         name: "product",
     },
@@ -107,7 +107,7 @@ const headCells = [
     {
         id: 8,
         numeric: false,
-        label: "Ngày hết hạn",
+        label: "Expiration Date",
         minWidth: 170,
         align: "center",
         name: "expirationDate",
@@ -115,7 +115,7 @@ const headCells = [
     {
         id: 9,
         numeric: false,
-        label: "Ngày cập nhật",
+        label: "Updated At",
         minWidth: 170,
         align: "center",
         name: "updated_at",
@@ -233,7 +233,7 @@ export default function WarrantyTable({ tableData }) {
     const deleteWarrantyMutation = useMutation({
         mutationFn: (id) => deleteWarranty(id),
         onSuccess: (_, id) => {
-            toast.success(`Xóa thành công`);
+            toast.success(`Successfully deleted`);
             queryClient.invalidateQueries({ queryKey: ["warrantys"] });
             let newSelected = selected.filter((i) => i != id);
             setSelected(newSelected);
@@ -242,7 +242,7 @@ export default function WarrantyTable({ tableData }) {
     const deleteWarrantiesMutation = useMutation({
         mutationFn: (idList) => deleteWarranties(idList),
         onSuccess: (_, idList) => {
-            toast.success(`Xóa thành công`);
+            toast.success(`Successfully deleted`);
             queryClient.invalidateQueries({ queryKey: ["warrantys"] });
             let newSelected = selected.filter((i) => !idList.includes(i));
             setSelected(newSelected);
@@ -337,7 +337,7 @@ export default function WarrantyTable({ tableData }) {
                         spacing={{ xs: 1, sm: 2, md: 2 }}
                     >
                         <TextField
-                            label="Tìm kiếm"
+                            label="Search"
                             variant="outlined"
                             size="small"
                             value={searchModel.searchString}
@@ -349,7 +349,7 @@ export default function WarrantyTable({ tableData }) {
                         />
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
-                                label="Ngày hết hạn từ"
+                                label="From Date"
                                 value={searchModel.expiredFromDate}
                                 onChange={(value) =>
                                     setSearchModel((prev) => ({
@@ -367,7 +367,7 @@ export default function WarrantyTable({ tableData }) {
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
-                                label="Ngày hết hạn đến"
+                                label="To Date"
                                 value={searchModel.expiredToDate}
                                 onChange={(value) =>
                                     setSearchModel((prev) => ({
@@ -413,7 +413,7 @@ export default function WarrantyTable({ tableData }) {
                                 marginLeft: "2rem !important",
                             }}
                         >
-                            Xóa bộ lộc
+                            Clear filter
                         </Button>
                         <LoadingButton
                             size="small"
@@ -424,7 +424,7 @@ export default function WarrantyTable({ tableData }) {
                             loadingPosition="start"
                             startIcon={<SearchIcon />}
                         >
-                            Tìm kiếm
+                            Search
                         </LoadingButton>
                         <Button
                             size="small"
@@ -433,7 +433,7 @@ export default function WarrantyTable({ tableData }) {
                             onClick={openSearchCardModal}
                             startIcon={<ContentPasteSearchIcon />}
                         >
-                            Tra mã BH
+                            Check warranty code
                         </Button>
                     </Stack>
                     {searchCardNumberModalProps && (
@@ -667,7 +667,7 @@ export default function WarrantyTable({ tableData }) {
                                     className={clsx(styles.button)}
                                     startIcon={<AddCircleIcon />}
                                 >
-                                    Thêm mới
+                                    Add New
                                 </Button>
                             ) : null}
                             {numSelected == 1 ? (
@@ -678,7 +678,7 @@ export default function WarrantyTable({ tableData }) {
                                     className={clsx(styles.button)}
                                     startIcon={<BorderColorIcon />}
                                 >
-                                    Chỉnh sửa
+                                    Edit
                                 </Button>
                             ) : null}
                             {numSelected > 0 ? (
@@ -689,7 +689,7 @@ export default function WarrantyTable({ tableData }) {
                                     variant="outlined"
                                     startIcon={<DeleteIcon />}
                                 >
-                                    Xóa
+                                    Delete
                                 </Button>
                             ) : null}
                         </div>
@@ -703,9 +703,9 @@ export default function WarrantyTable({ tableData }) {
                             page={page}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
-                            labelRowsPerPage="Số hàng mỗi trang"
+                            labelRowsPerPage="Number of rows per page"
                             labelDisplayedRows={({ from, to, count }) => {
-                                return `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`;
+                                return `${from}–${to} in ${count !== -1 ? count : `more ${to}`}`;
                             }}
                         />
                     </Box>

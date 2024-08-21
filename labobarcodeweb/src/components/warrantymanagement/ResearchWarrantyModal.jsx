@@ -38,12 +38,12 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
     var headerRenderData =
         data?.data?.data?.inventoryStatus == true
             ? {
-                  title: "Có hàng",
+                  title: "In stock",
                   icon: <CheckCircleOutlineIcon sx={{ fontSize: 40 }} />,
                   className: styles.titleInventory,
               }
             : {
-                  title: "Hết hàng",
+                  title: "No stock",
                   icon: <HighlightOffIcon sx={{ fontSize: 40 }} />,
                   className: styles.titleNoInventory,
               };
@@ -56,7 +56,7 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                     maxWidth: "unset !important",
                 },
             }}
-            title="Tra mã bảo hành"
+            title="Check warranty code"
             onClose={onClose}
             ref={childRef}
             isHasFooter={false}
@@ -64,7 +64,7 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
             <div className={styles.container}>
                 <div className={styles.filterContainer}>
                     <TextField
-                        label="Mã bảo hành"
+                        label="Warranty Code"
                         variant="outlined"
                         sx={{
                             width: "20rem",
@@ -74,7 +74,7 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                         onChange={handleInputChange}
                     />
                     <Button sx={{ ml: 1 }} variant="contained" onClick={handleSubmit}>
-                        Tìm kiếm
+                        Search
                     </Button>
                 </div>
                 <div className={styles.result}>
@@ -145,14 +145,14 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                                         color: "#DF0F0F",
                                     }}
                                 >
-                                    {data.data?.message ?? "Lỗi"}
+                                    {data.data?.message ?? "Error"}
                                 </Typography>
                             </div>
                         )}
                     </div>
 
                     <div className={styles.rightResult}>
-                        <div className={styles.rightContent}>DDS LAB</div>
+                        <div className={styles.rightContent}>SunnyTA Lab</div>
                     </div>
                 </div>
             </div>

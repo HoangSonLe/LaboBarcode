@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import styles from "./Header.module.css";
 import Menu from "../menu/Menu";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logo.jpg";
 const Header = () => {
     const menuData = [
         {
@@ -44,7 +44,7 @@ const Header = () => {
     return (
         <div className={clsx(styles.nav)}>
             <div className={clsx(styles.logo)}>
-                <img alt="Logo" src={logo} />
+                <img alt="Logo" src={logo} style={{ width: '150px', height: 'auto' }} />
             </div>
             <div className={clsx(styles.menu)}>
                 <Menu menuData={menuData} />

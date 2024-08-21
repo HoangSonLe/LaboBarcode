@@ -79,10 +79,10 @@ const CustomizedModal = React.forwardRef(
                                     autoFocus
                                     onClick={closeModal}
                                 >
-                                    Đóng
+                                    Close
                                 </Button>
                                 <Button variant="contained" autoFocus onClick={handleSave}>
-                                    Lưu
+                                    Save
                                 </Button>
                             </Box>
                         )}

@@ -84,11 +84,11 @@ const FileUploadWithPreview = memo(
                     onChange={handleFileChange}
                 />
                 <TextField
-                    label="Tải ảnh"
+                    label="Upload Photo"
                     variant="outlined"
                     fullWidth
                     value={
-                        allPreviews.length > 0 ? `${allPreviews.length} file(s) đã được chọn` : ""
+                        allPreviews.length > 0 ? `${allPreviews.length} file(s) selected` : ""
                     }
                     onClick={handleTextFieldClick}
                     InputProps={{
@@ -111,7 +111,7 @@ const FileUploadWithPreview = memo(
                         sx={{ m: 0, p: 2 }}
                         id="customized-dialog-title"
                     >
-                        Xem ảnh
+                        View photo.
                     </DialogTitle>
                     <IconButton
                         aria-label="close"

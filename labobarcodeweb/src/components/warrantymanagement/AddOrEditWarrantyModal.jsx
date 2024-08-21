@@ -103,9 +103,9 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
             onSuccess: () => {
                 callbackCloseModal();
                 if(!id){
-                    toast.success("Thêm thành công!");
+                    toast.success("Successfully added!");
                 }
-                else toast.success("Cập nhật thành công!");
+                else toast.success("Update successful!");
             },
         });
     };
@@ -115,7 +115,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
     return (
         <CustomizedModal
             className={styles.customModal}
-            title={id ? "Chỉnh sửa" : "Thêm mới"}
+            title={id ? "Edit" : "Add new"}
             onSave={handleSubmit}
             onClose={onClose}
             ref={childRef}
@@ -131,7 +131,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Tên bệnh nhân"
+                            label="Patient Name"
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -143,7 +143,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Số điện thoại bệnh nhân"
+                            label="Patient Phone Number"
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -155,7 +155,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Tên phòng khám"
+                            label="Clinic"
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -167,7 +167,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Tên phòng LAB"
+                            label="Lab Name"
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -179,7 +179,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Bác sĩ"
+                            label="Doctor"
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -191,7 +191,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Sản phẩm"
+                            label="Product"
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -203,7 +203,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ pr: 1, pl: 1 }}>
                         <TextField
-                            label="Số thẻ bảo hành"
+                            label="Warranty code"
                             variant="outlined"
                             fullWidth
                             margin="dense"
@@ -223,7 +223,7 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     >
                         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
                             <DatePicker
-                                label="Ngày hết hạn"
+                                label="ExpirationDate"
                                 views={["year", "month", "day"]}
                                 value={moment(formData.expirationDate)}
                                 onChange={(value) =>

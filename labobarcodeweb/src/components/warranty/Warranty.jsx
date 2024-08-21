@@ -33,12 +33,12 @@ const Warranty = () => {
             <div className={clsx(styles.cardContainer)}>
                 <div className={clsx(styles.formContainer)}>
                     <div className={clsx(styles.formTitle)}>
-                        Please put code number on your card to check warranty infomation:
+                    Vui lòng nhập mã số trên thẻ của bạn để kiểm tra thông tin bảo hành:
                     </div>
                     <OutlinedInput
                         className={clsx(styles.textFieldForm)}
                         id="outlined-basic"
-                        placeholder="Nhập mã bảo hành"
+                        placeholder="Enter warranty code"
                         variant="outlined"
                         InputLabelProps={{
                             shrink: false,
@@ -59,7 +59,7 @@ const Warranty = () => {
                         startIcon={<SearchIcon />}
                         onClick={handleSubmit}
                     >
-                        Kiểm tra
+                        Check
                     </LoadingButton>
                 </div>
                 {isError && (
@@ -70,7 +70,7 @@ const Warranty = () => {
                                 color: "#DF0F0F",
                             }}
                         >
-                            Lỗi
+                            Error
                         </Typography>
                     </div>
                 )}
@@ -93,27 +93,27 @@ const Warranty = () => {
                                     <td>Information</td>
                                 </tr>
                                 <tr>
-                                    <td>Mã số</td>
+                                    <td>Warranty Code</td>
                                     <td>{warrantyInfomation.codeNumber}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tên khách hàng</td>
+                                    <td>PatientName</td>
                                     <td>{warrantyInfomation.patientName}</td>
                                 </tr>
                                 <tr>
-                                    <td>Phòng khám</td>
+                                    <td>Clinic</td>
                                     <td>{warrantyInfomation.clinic}</td>
                                 </tr>
                                 <tr>
-                                    <td>Bác sĩ</td>
+                                    <td>Doctor</td>
                                     <td>{warrantyInfomation.doctor}</td>
                                 </tr>
                                 <tr>
-                                    <td>Labo</td>
+                                    <td>Lab Name</td>
                                     <td>{warrantyInfomation.labName}</td>
                                 </tr>
                                 <tr>
-                                    <td>Ngày hết hạn</td>
+                                    <td>ExpirationDate</td>
                                     <td>
                                         {warrantyInfomation.expirationDate != null &&
                                             new Date(
@@ -122,7 +122,7 @@ const Warranty = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Tên sản phẩm</td>
+                                    <td>Product</td>
                                     <td>{warrantyInfomation.product}</td>
                                 </tr>
                             </tbody>
@@ -156,7 +156,7 @@ const Warranty = () => {
                 <div className={clsx(styles.subContent)}>
                     <ul>
                         <li>
-                            Các loại phục hình Zirconia khác nhau do DDS LAB sản xuất, được chế tạo
+                            Các loại phục hình Zirconia khác nhau do SunnyTA Lab sản xuất, được chế tạo
                             bằng nguyên liệu nhập khẩu chính hãng có nguồn gốc rõ ràng.
                         </li>
                         <li>Khuyến nghị tuân thủ theo hướng dẫn của nha sĩ điều trị.</li>

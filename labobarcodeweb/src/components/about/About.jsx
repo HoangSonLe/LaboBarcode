@@ -55,12 +55,12 @@ const About = () => {
                 </div>
             </div>
             <div className={clsx(styles.content)}>
-                <b>DDS LAB</b> is your trusted partner for all your dental needs. As a leading
+                <b>SunnyTA Lab</b> is your trusted partner for all your dental needs. As a leading
                 dental laboratory, we are dedicated to providing top-quality dental solutions that
                 are both functional and aesthetically pleasing. <br />
                 Our team of experts use the latest technology and techniques to create durable and
                 long-lasting dental prosthetics. Whether you're a dentist or a patient seeking a
-                smile makeover,<b> DDS LAB</b> is here to help. Contact us today to learn more about
+                smile makeover,<b>SunnyTA Lab</b> is here to help. Contact us today to learn more about
                 our services and to experience the benefits of a beautiful, healthy smile.
             </div>
             <div className={clsx(styles.footer)}></div>
