@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { Box, Dialog, DialogContent, IconButton } from "@mui/material";
 import {
@@ -15,118 +14,122 @@ export default function BarcodeScanner() {
     const [code, setCode] = useState("");
     const [videoInputDevices, setVideoInputDevices] = useState([]);
 
-    const initialRender = useRef(true);
-
     const [hasCameraAccess, setHasCameraAccess] = useState(false);
     const [cameraError, setCameraError] = useState(null);
+
+    const videoRef = useRef(null);
+    const codeReader = new BrowserQRCodeReader();
+
     const checkCameraAccess = async () => {
         try {
             await navigator.mediaDevices.getUserMedia({ video: true });
             setHasCameraAccess(true);
         } catch (error) {
             setCameraError("Camera access denied. Please enable camera permissions.");
+            setHasCameraAccess(false);
         }
     };
-    const codeReader = new BrowserQRCodeReader();
-
-    console.log("ZXing code reader initialized");
 
     useEffect(() => {
-        if (initialRender.current) {
-            // Skip the first render
-            initialRender.current = false;
-        } else {
-            // Run this on subsequent renders
+        if (scanning) {
+            checkCameraAccess();
         }
     }, [scanning]);
 
-    const setupDevices = (videoInputDevices) => {
-        // Try to find a device with 'back' or 'rear' in its label
-        const backCamera = videoInputDevices.find(
+    useEffect(() => {
+        if (scanning && hasCameraAccess) {
+            codeReader
+                .getVideoInputDevices()
+                .then((devices) => {
+                    setupDevices(devices);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+    }, [scanning, hasCameraAccess]);
+
+    const setupDevices = (devices) => {
+        const backCamera = devices.find(
             (device) =>
                 device.label.toLowerCase().includes("back") ||
                 device.label.toLowerCase().includes("rear")
         );
 
-        // Set the back camera as the default if available, otherwise use the first device
-        setSelectedDeviceId(backCamera ? backCamera.deviceId : videoInputDevices[0].deviceId);
-        // Setup devices dropdown
-        if (videoInputDevices.length >= 1) {
-            setVideoInputDevices(videoInputDevices);
-        }
-        setScanning(true);
-    };
-    const decodeContinuously = (selectedDeviceId) => {
-        codeReader.decodeFromInputVideoDeviceContinuously(
-            selectedDeviceId,
-            "video",
-            (result, err) => {
-                if (result) {
-                    // properly decoded QR code
-                    console.log("Found QR code!", result);
-                    setCode(result.text);
-                    setScanning(false);
-                }
-
-                if (err) {
-                    setCode("");
-
-                    if (err instanceof NotFoundException) {
-                        console.log("No QR code found.");
-                    }
-
-                    if (err instanceof ChecksumException) {
-                        console.log("A code was found, but its read value was not valid.");
-                    }
-
-                    if (err instanceof FormatException) {
-                        console.log("A code was found, but it was in an invalid format.");
-                    }
-                }
-            }
-        );
+        setSelectedDeviceId(backCamera ? backCamera.deviceId : devices[0].deviceId);
+        setVideoInputDevices(devices);
     };
 
     useEffect(() => {
         if (selectedDeviceId && scanning) {
-            decodeContinuously(selectedDeviceId);
-            console.log(`Started decoding from camera with id ${selectedDeviceId}`);
+            codeReader.decodeFromInputVideoDeviceContinuously(
+                selectedDeviceId,
+                videoRef.current,
+                (result, err) => {
+                    if (result) {
+                        setCode(result.text);
+                        setScanning(false);
+                    }
+
+                    if (err) {
+                        setCode("");
+
+                        if (err instanceof NotFoundException) {
+                            console.log("No QR code found.");
+                        } else if (err instanceof ChecksumException) {
+                            console.log("Invalid QR code.");
+                        } else if (err instanceof FormatException) {
+                            console.log("Invalid QR code format.");
+                        }
+                    }
+                }
+            );
         }
-    }, [selectedDeviceId]);
+
+        return () => {
+            codeReader.reset();
+        };
+    }, [selectedDeviceId, scanning]);
 
     const openBarcodeScanner = () => {
-        if (hasCameraAccess) {
-            codeReader
-                .getVideoInputDevices()
-                .then((videoInputDevices) => {
-                    setupDevices(videoInputDevices);
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-        } else {
-            checkCameraAccess();
-        }
+        setScanning(true);
     };
+
     const closeDialog = () => {
         setScanning(false);
+        setCode(""); // Clear the code after closing
     };
+
     return (
         <>
             <IconButton onClick={openBarcodeScanner}>
                 <QrCodeScannerIcon fontSize="large" />
             </IconButton>
             <Dialog
-                sx={{ minWidth: "unset", width: "unset" }}
                 open={scanning}
                 onClose={closeDialog}
                 maxWidth="sm"
-                fullWidth
+                PaperProps={{
+                    sx: {
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    },
+                }}
             >
-                <DialogContent sx={{ width: "fit-content", padding: "10px" }}>
-                    <Box>Code:{code}</Box>
+                <DialogContent
+                    sx={{
+                        width: "fit-content",
+                        padding: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                    }}
+                >
+                    <Box>Code: {code}</Box>
                     <Box>
-                        <video id="video" width="300" height="200" />
+                        <video ref={videoRef} id="video" width="300" height="200" />
                     </Box>
                 </DialogContent>
             </Dialog>
