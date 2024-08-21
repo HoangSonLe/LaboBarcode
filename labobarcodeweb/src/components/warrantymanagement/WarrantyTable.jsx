@@ -58,15 +58,14 @@ const headCells = [
         label: "Mã Code",
         minWidth: 170,
         align: "center",
-           name: "codeNumber"
-
+        name: "codeNumber",
     },
     {
         id: 1,
         numeric: false,
         label: "Tên bệnh nhân",
         minWidth: 170,
-        name: "patientName"
+        name: "patientName",
     },
     {
         id: 2,
@@ -74,36 +73,35 @@ const headCells = [
         label: "Số điện thoại",
         minWidth: 170,
         align: "center",
-        name: "patientPhoneNumber"
-     
+        name: "patientPhoneNumber",
     },
     {
         id: 3,
         numeric: false,
         label: "Phòng khám",
         minWidth: 170,
-        name: "clinic"
+        name: "clinic",
     },
     {
         id: 4,
         numeric: false,
         label: "Phòng LAB",
         minWidth: 170,
-        name: "labName"
+        name: "labName",
     },
     {
         id: 5,
         numeric: false,
         label: "Bác sĩ",
         minWidth: 170,
-        name: "doctor"
+        name: "doctor",
     },
     {
         id: 6,
         numeric: false,
         label: "Sản phẩm",
         minWidth: 170,
-                name: "product"
+        name: "product",
     },
 
     {
@@ -112,7 +110,7 @@ const headCells = [
         label: "Ngày hết hạn",
         minWidth: 170,
         align: "center",
-        name: "expirationDate"
+        name: "expirationDate",
     },
     {
         id: 9,
@@ -120,7 +118,7 @@ const headCells = [
         label: "Ngày cập nhật",
         minWidth: 170,
         align: "center",
-        name: "updated_at"
+        name: "updated_at",
     },
 ];
 
@@ -305,7 +303,7 @@ export default function WarrantyTable({ tableData }) {
         setPage(0);
     };
     const onClickSearch = () => {
-        setPage(0)
+        setPage(0);
         refetch();
     };
     const onClickClearSearch = () => {
@@ -332,7 +330,7 @@ export default function WarrantyTable({ tableData }) {
                     onClose={handleCloseModal}
                 />
             )}
-            <Paper sx={{ width: "90%" }}>
+            <Paper sx={{ width: "95%" }}>
                 <div className={clsx(styles.filterContainer)}>
                     <Stack
                         direction={{ sm: "column", md: "row" }}
@@ -344,6 +342,10 @@ export default function WarrantyTable({ tableData }) {
                             size="small"
                             value={searchModel.searchString}
                             onChange={handleInputChange("searchString")}
+                            sx={{
+                                marginTop: "4px !important",
+                                marginBottom: "4px !important",
+                            }}
                         />
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
@@ -357,6 +359,10 @@ export default function WarrantyTable({ tableData }) {
                                 }
                                 format="DD/MM/YYYY"
                                 slotProps={{ textField: { size: "small" } }}
+                                sx={{
+                                    marginTop: "4px !important",
+                                    marginBottom: "4px !important",
+                                }}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -371,9 +377,20 @@ export default function WarrantyTable({ tableData }) {
                                 }
                                 format="DD/MM/YYYY"
                                 slotProps={{ textField: { size: "small" } }}
+                                sx={{
+                                    marginTop: "4px !important",
+                                    marginBottom: "4px !important",
+                                }}
                             />
                         </LocalizationProvider>
-                        <FormControl sx={{ ml: 1, minWidth: 120 }} size="small">
+                        {/* <FormControl
+                            sx={{
+                                marginTop: "4px !important",
+                                marginBottom: "4px !important",
+                                minWidth: 120,
+                            }}
+                            size="small"
+                        >
                             <InputLabel id="expiredStatusLabel">Trạng thái</InputLabel>
                             <Select
                                 size="small"
@@ -385,13 +402,16 @@ export default function WarrantyTable({ tableData }) {
                                 <MenuItem value={true}>Còn hạn</MenuItem>
                                 <MenuItem value={false}>Hết hạn</MenuItem>
                             </Select>
-                        </FormControl>
+                        </FormControl> */}
                         <Button
-                            size="small"
+                            size="medium"
                             onClick={onClickClearSearch}
                             variant="outlined"
                             className={clsx(styles.outlinedButton)}
                             startIcon={<CleaningServicesIcon />}
+                            sx={{
+                                marginLeft: "2rem !important",
+                            }}
                         >
                             Xóa bộ lộc
                         </Button>
@@ -596,7 +616,7 @@ export default function WarrantyTable({ tableData }) {
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={6} />
+                                    <TableCell colSpan={headCells.length + 1} />
                                 </TableRow>
                             )}
                         </TableBody>
