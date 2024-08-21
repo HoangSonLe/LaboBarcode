@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";
 import { getWarrantyByCode } from "../../apis/warranty.api";
-import BarcodeScannerComponent from "../ui-kit/BarcodeScanner/BarcodeScanner";
+// import BarcodeScannerComponent from "../ui-kit/BarcodeScanner/BarcodeScanner";
 import styles from "./Warranty.module.css";
 const Warranty = () => {
     const [cardNumber, setCardNumber] = useState("");
@@ -43,11 +43,11 @@ const Warranty = () => {
                         InputLabelProps={{
                             shrink: false,
                         }}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <BarcodeScannerComponent />
-                            </InputAdornment>
-                        }
+                        // endAdornment={
+                        //     <InputAdornment position="end">
+                        //         <BarcodeScannerComponent />
+                        //     </InputAdornment>
+                        // }
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
                     />

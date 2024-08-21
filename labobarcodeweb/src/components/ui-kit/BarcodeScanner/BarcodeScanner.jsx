@@ -100,7 +100,10 @@ export default function BarcodeScanner(){
                     <label for="sourceSelect">Change video source:</label>
                     <select
                         id="sourceSelect"
-                        onChange={() => setSelectedDeviceId(sourceSelect.value)}
+                        onChange={() => {
+                            alert(sourceSelect.value);
+                            setSelectedDeviceId(sourceSelect.value);
+                        }}
                     >
                         {videoInputDevices.map((element) => (
                             <option value={element.deviceId}>{element.label}</option>
