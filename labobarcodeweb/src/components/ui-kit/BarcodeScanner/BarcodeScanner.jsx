@@ -68,7 +68,6 @@ export default function BarcodeScanner() {
                 (result, err) => {
                     if (result) {
                         setCode(result.text);
-                        setScanning(false);
                     }
 
                     if (err) {
