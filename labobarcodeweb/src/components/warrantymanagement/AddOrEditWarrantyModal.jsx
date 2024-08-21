@@ -102,7 +102,10 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
         createOrEditWarrantyMutation.mutate(postData, {
             onSuccess: () => {
                 callbackCloseModal();
-                toast.success("Thêm thành công!");
+                if(!id){
+                    toast.success("Thêm thành công!");
+                }
+                else toast.success("Cập nhật thành công!");
             },
         });
     };
