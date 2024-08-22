@@ -10,7 +10,7 @@ const ErrorPage = () => {
                     color: "var(--red-color)",
                 }}
             >
-                ErrorPage
+                Error Page
             </Typography>
         </div>
     );
