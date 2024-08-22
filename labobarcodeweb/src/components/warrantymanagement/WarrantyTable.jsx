@@ -267,13 +267,9 @@ export default function WarrantyTable({ tableData }) {
         setOrderBy(property);
     };
     const handleSelectAllClick = (event) => {
-        console.log("event", event.target.checked);
-        if (event.target.indeterminate) {
-            debugger;
-        }
         if (event.target.checked) {
             const newSelected = data?.data?.data.map((n) => n.warrantyId);
-            setSelected(newSelected);
+            setSelected(newSelected ?? []);
             return;
         }
         setSelected([]);
@@ -317,7 +313,7 @@ export default function WarrantyTable({ tableData }) {
     // Avoid a layout jump when reaching the last page with empty rows.
     let total = !data ? 0 : data.data.total;
     let currentTotal = !data ? 0 : data.data.data.length;
-    let numSelected = selected.length;
+    let numSelected = selected?.length;
     const emptyRows = page > 0 ? Math.max(0, Math.abs(rowsPerPage - data?.data?.data.length)) : 0;
     // console.log(currentTotal);
     console.log(emptyRows, page);
