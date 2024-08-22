@@ -39,10 +39,10 @@
 }
 .rightContent {
     transform: rotate(90deg);
-    width: 7rem;
+    width: 10rem;
     transform-origin: 0 0;
     position: absolute;
-    bottom: 60%;
+    bottom: 65%;
     left: 65%;
     font-weight: bold;
     letter-spacing: 3px;

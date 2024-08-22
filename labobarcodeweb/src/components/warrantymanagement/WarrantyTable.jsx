@@ -9,6 +9,7 @@ import {
     Button,
     Chip,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Select,
@@ -42,6 +43,8 @@ import AddOrEditWarrantyModal from "./AddOrEditWarrantyModal";
 import ResearchWarrantyModal from "./ResearchWarrantyModal";
 import styles from "./WarrantyManagement.module.css";
 import "../globals/variables.css";
+import ResponsiveButton from "../ui-kit/ResponsiveButton/ResponsiveButton";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const headCells = [
     // {
@@ -70,7 +73,7 @@ const headCells = [
     {
         id: 2,
         numeric: false,
-        label: "Patient Phone Number",
+        label: "Phone Number",
         minWidth: 170,
         align: "center",
         name: "patientPhoneNumber",
@@ -78,7 +81,7 @@ const headCells = [
     {
         id: 3,
         numeric: false,
-        label: "Clinic",
+        label: "Clinic Name",
         minWidth: 170,
         name: "clinic",
     },
@@ -92,14 +95,14 @@ const headCells = [
     {
         id: 5,
         numeric: false,
-        label: "Doctor",
+        label: "Doctor Name",
         minWidth: 170,
         name: "doctor",
     },
     {
         id: 6,
         numeric: false,
-        label: "Product",
+        label: "Product Name",
         minWidth: 170,
         name: "product",
     },
@@ -107,7 +110,7 @@ const headCells = [
     {
         id: 8,
         numeric: false,
-        label: "Expiration Date",
+        label: "Expired Date",
         minWidth: 170,
         align: "center",
         name: "expirationDate",
@@ -115,7 +118,7 @@ const headCells = [
     {
         id: 9,
         numeric: false,
-        label: "Updated At",
+        label: "Updated Date",
         minWidth: 170,
         align: "center",
         name: "updated_at",
@@ -409,9 +412,6 @@ export default function WarrantyTable({ tableData }) {
                             variant="outlined"
                             className={clsx(styles.outlinedButton)}
                             startIcon={<CleaningServicesIcon />}
-                            sx={{
-                                marginLeft: "2rem !important",
-                            }}
                         >
                             Clear filter
                         </Button>
@@ -660,37 +660,81 @@ export default function WarrantyTable({ tableData }) {
                                 ></Typography>
                             )}
                             {numSelected == 0 ? (
-                                <Button
-                                    size="small"
-                                    onClick={openAddOrEditModal}
-                                    variant="contained"
-                                    className={clsx(styles.button)}
-                                    startIcon={<AddCircleIcon />}
-                                >
-                                    Add New
-                                </Button>
+                                <ResponsiveButton
+                                    renderButton={() => (
+                                        <Button
+                                            size="small"
+                                            onClick={openAddOrEditModal}
+                                            variant="contained"
+                                            className={clsx(styles.button)}
+                                            startIcon={<AddCircleIcon />}
+                                        >
+                                            Add New
+                                        </Button>
+                                    )}
+                                    renderIconButton={() => (
+                                        <IconButton
+                                            sx={{
+                                                color: "var(--primary-color)",
+                                            }}
+                                            onClick={openAddOrEditModal}
+                                        >
+                                            <AddCircleOutlineIcon fontSize="large" />
+                                        </IconButton>
+                                    )}
+                                />
                             ) : null}
                             {numSelected == 1 ? (
-                                <Button
-                                    size="small"
-                                    onClick={openAddOrEditModal}
-                                    variant="contained"
-                                    className={clsx(styles.button)}
-                                    startIcon={<BorderColorIcon />}
-                                >
-                                    Edit
-                                </Button>
+                                <ResponsiveButton
+                                    renderButton={() => (
+                                        <Button
+                                            size="small"
+                                            onClick={openAddOrEditModal}
+                                            variant="contained"
+                                            className={clsx(styles.button)}
+                                            startIcon={<BorderColorIcon />}
+                                        >
+                                            Edit
+                                        </Button>
+                                    )}
+                                    renderIconButton={() => (
+                                        <IconButton
+                                            title="Edit"
+                                            sx={{
+                                                color: "var(--primary-color)",
+                                            }}
+                                            onClick={openAddOrEditModal}
+                                        >
+                                            <BorderColorIcon fontSize="large" />
+                                        </IconButton>
+                                    )}
+                                />
                             ) : null}
                             {numSelected > 0 ? (
-                                <Button
-                                    size="small"
-                                    className={clsx(styles.redoutlinedButton)}
-                                    onClick={handleOnDelete}
-                                    variant="outlined"
-                                    startIcon={<DeleteIcon />}
-                                >
-                                    Delete
-                                </Button>
+                                <ResponsiveButton
+                                    renderButton={() => (
+                                        <Button
+                                            size="small"
+                                            className={clsx(styles.redoutlinedButton)}
+                                            onClick={handleOnDelete}
+                                            variant="outlined"
+                                            startIcon={<DeleteIcon />}
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
+                                    renderIconButton={() => (
+                                        <IconButton
+                                            title="Delete"
+                                            sx={{
+                                                color: "var(--red-color)",
+                                            }}
+                                            onClick={handleOnDelete}
+                                        >
+                                            <DeleteIcon fontSize="large" />
+                                        </IconButton>
+                                    )}
+                                />
                             ) : null}
                         </div>
 
@@ -703,9 +747,9 @@ export default function WarrantyTable({ tableData }) {
                             page={page}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
-                            labelRowsPerPage="Number of rows per page"
+                            labelRowsPerPage="Rows per page:"
                             labelDisplayedRows={({ from, to, count }) => {
-                                return `${from}–${to} in ${count !== -1 ? count : `more ${to}`}`;
+                                return `${from}–${to} of ${count !== -1 ? count : `more ${to}`}`;
                             }}
                         />
                     </Box>

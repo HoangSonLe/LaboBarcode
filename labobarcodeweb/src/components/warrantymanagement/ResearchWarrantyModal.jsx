@@ -56,7 +56,7 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                     maxWidth: "unset !important",
                 },
             }}
-            title="Check warranty code"
+            title="Check Warranty Code"
             onClose={onClose}
             ref={childRef}
             isHasFooter={false}
@@ -142,7 +142,7 @@ const ResearchWarrantyModal = React.forwardRef(({ onClose }, ref) => {
                                 <Typography
                                     variant="h4"
                                     sx={{
-                                        color: "#DF0F0F",
+                                        color: "var(--red-color)",
                                     }}
                                 >
                                     {data.data?.message ?? "Error"}

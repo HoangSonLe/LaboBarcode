@@ -1,3 +1,4 @@
+@import "../../globals/global.module.css";
 .container {
     max-width: unset;
 }
@@ -8,4 +9,12 @@
 }
 .icon {
     color: #148f96;
+}
+.button {
+    composes: primaryButton from "../../globals/global.module.css";
+    margin-right: 5px;
+    /* background: var(--primary-color) 0% 0% no-repeat padding-box !important; */
+}
+.outlinedButton {
+    composes: primaryOutlinedButton from "../../globals/global.module.css";
 }

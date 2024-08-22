@@ -85,7 +85,7 @@ const Warranty = () => {
                         <Typography
                             variant="h4"
                             sx={{
-                                color: "#DF0F0F",
+                                color: "var(--red-color)",
                             }}
                         >
                             Error

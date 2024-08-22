@@ -87,9 +87,8 @@ const FileUploadWithPreview = memo(
                     label="Upload Photo"
                     variant="outlined"
                     fullWidth
-                    value={
-                        allPreviews.length > 0 ? `${allPreviews.length} file(s) selected` : ""
-                    }
+                    value={allPreviews.length > 0 ? `${allPreviews.length} file(s) selected` : ""}
+                    margin="normal"
                     onClick={handleTextFieldClick}
                     InputProps={{
                         readOnly: true,

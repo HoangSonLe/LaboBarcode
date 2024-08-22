@@ -6,8 +6,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
+import clsx from "clsx";
 import * as React from "react";
-
+import _styles from "./Modal.module.css";
 const CustomizedModal = React.forwardRef(
     (
         { title, children, onSave, onClose, customRenderFooter, styles = {}, isHasFooter = true },
@@ -78,10 +79,16 @@ const CustomizedModal = React.forwardRef(
                                     variant="outlined"
                                     autoFocus
                                     onClick={closeModal}
+                                    className={clsx(_styles.outlinedButton)}
                                 >
                                     Close
                                 </Button>
-                                <Button variant="contained" autoFocus onClick={handleSave}>
+                                <Button
+                                    className={clsx(_styles.button)}
+                                    variant="contained"
+                                    autoFocus
+                                    onClick={handleSave}
+                                >
                                     Save
                                 </Button>
                             </Box>

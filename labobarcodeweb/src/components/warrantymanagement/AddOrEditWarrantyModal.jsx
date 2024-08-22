@@ -102,10 +102,9 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
         createOrEditWarrantyMutation.mutate(postData, {
             onSuccess: () => {
                 callbackCloseModal();
-                if(!id){
+                if (!id) {
                     toast.success("Successfully added!");
-                }
-                else toast.success("Update successful!");
+                } else toast.success("Update successful!");
             },
         });
     };
@@ -127,9 +126,20 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 },
             }}
         >
-            <Grid container spacing={2}>
+            <Grid
+                container
+                spacing={{
+                    sm: 0, // Spacing for small screens
+                    md: 1, // Spacing for medium screens
+                }}
+            >
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Patient Name"
                             variant="outlined"
@@ -141,7 +151,12 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Patient Phone Number"
                             variant="outlined"
@@ -153,7 +168,12 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Clinic"
                             variant="outlined"
@@ -165,7 +185,12 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Lab Name"
                             variant="outlined"
@@ -177,7 +202,12 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Doctor"
                             variant="outlined"
@@ -189,7 +219,12 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Product"
                             variant="outlined"
@@ -201,7 +236,12 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pl values for different breakpoints
+                        }}
+                    >
                         <TextField
                             label="Warranty code"
                             variant="outlined"
@@ -215,10 +255,14 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                 <Grid item xs={12} md={6}>
                     <Box
                         sx={{
-                            p: 1,
                             "& .MuiTextField-root": {
                                 width: "100%",
                             },
+                            // p: 1,
+                            pt: { xs: 1, sm: 1, md: 1 },
+                            pr: { xs: 0, sm: 0, md: 1 },
+                            pb: { xs: 1, sm: 1, md: 1 },
+                            pl: { xs: 0, sm: 0, md: 1 },
                         }}
                     >
                         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
@@ -230,13 +274,20 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
                                     setFormData((prev) => ({ ...prev, expirationDate: value }))
                                 }
                                 format="DD/MM/YYYY"
-                                renderInput={(params) => <TextField fullWidth {...params} />}
+                                renderInput={(params) => (
+                                    <TextField margin="normal" fullWidth {...params} />
+                                )}
                             />
                         </LocalizationProvider>
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pr: 1, pl: 1 }}>
+                    <Box
+                        sx={{
+                            pr: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                            pl: { xs: 0, sm: 0, md: 1 }, // Different pr values for different breakpoints
+                        }}
+                    >
                         <FileUploadWithPreview
                             selectedFiles={formData.imageSrcList}
                             existingImages={formData.imageSrcPreviewList ?? []}
