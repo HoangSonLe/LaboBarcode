@@ -8,18 +8,18 @@ import {
     NotFoundException,
 } from "@zxing/library";
 
-export default function BarcodeScanner() {
+export default function BarcodeScanner({ hanldeScanQRSuccess }) {
     const [scanning, setScanning] = useState(false);
     const [selectedDeviceId, setSelectedDeviceId] = useState("");
     const [code, setCode] = useState("");
     const [videoInputDevices, setVideoInputDevices] = useState([]);
-
     const [hasCameraAccess, setHasCameraAccess] = useState(false);
     const [cameraError, setCameraError] = useState(null);
 
     const videoRef = useRef(null);
-    const codeReader = new BrowserQRCodeReader();
+    const codeReaderRef = useRef(null); // Use ref for codeReader instance
 
+    // Check camera access
     const checkCameraAccess = async () => {
         try {
             await navigator.mediaDevices.getUserMedia({ video: true });
@@ -30,15 +30,26 @@ export default function BarcodeScanner() {
         }
     };
 
+    // Initialize camera access on dialog open
     useEffect(() => {
         if (scanning) {
             checkCameraAccess();
+        } else {
+            // Stop camera immediately when scanning is set to false
+            if (codeReaderRef.current) {
+                codeReaderRef.current.reset();
+                console.log("Camera stopped.");
+            }
         }
     }, [scanning]);
 
+    // Handle starting the camera when scanning state changes
     useEffect(() => {
         if (scanning && hasCameraAccess) {
-            codeReader
+            // Initialize the QR code reader
+            codeReaderRef.current = new BrowserQRCodeReader();
+
+            codeReaderRef.current
                 .getVideoInputDevices()
                 .then((devices) => {
                     setupDevices(devices);
@@ -47,8 +58,15 @@ export default function BarcodeScanner() {
                     console.error(err);
                 });
         }
+
+        return () => {
+            if (codeReaderRef.current) {
+                codeReaderRef.current.reset(); // Stop the camera when scanning stops
+            }
+        };
     }, [scanning, hasCameraAccess]);
 
+    // Setup the available devices
     const setupDevices = (devices) => {
         const backCamera = devices.find(
             (device) =>
@@ -58,16 +76,24 @@ export default function BarcodeScanner() {
 
         setSelectedDeviceId(backCamera ? backCamera.deviceId : devices[0].deviceId);
         setVideoInputDevices(devices);
+
+        if (backCamera || devices.length > 0) {
+            decodeContinuously(backCamera ? backCamera.deviceId : devices[0].deviceId);
+        }
     };
 
-    useEffect(() => {
-        if (selectedDeviceId && scanning) {
-            codeReader.decodeFromInputVideoDeviceContinuously(
-                selectedDeviceId,
+    // Start decoding QR code continuously
+    const decodeContinuously = (deviceId) => {
+        if (codeReaderRef.current) {
+            codeReaderRef.current.decodeFromInputVideoDeviceContinuously(
+                deviceId,
                 videoRef.current,
                 (result, err) => {
                     if (result) {
                         setCode(result.text);
+                        typeof hanldeScanQRSuccess == "function" &&
+                            hanldeScanQRSuccess(result.text);
+                        setScanning(false); // Stop scanning after a successful decode
                     }
 
                     if (err) {
@@ -84,16 +110,14 @@ export default function BarcodeScanner() {
                 }
             );
         }
+    };
 
-        return () => {
-            codeReader.reset();
-        };
-    }, [selectedDeviceId, scanning]);
-
+    // Handle opening the barcode scanner dialog
     const openBarcodeScanner = () => {
         setScanning(true);
     };
 
+    // Handle closing the barcode scanner dialog
     const closeDialog = () => {
         setScanning(false);
         setCode(""); // Clear the code after closing

@@ -1,19 +1,17 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { LoadingButton } from "@mui/lab";
-import {
-    CircularProgress,
-    InputAdornment,
-    OutlinedInput,
-    Typography
-} from "@mui/material";
+import { CircularProgress, InputAdornment, OutlinedInput, Typography } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getWarrantyByCode } from "../../apis/warranty.api";
 // import BarcodeScannerComponent from "../ui-kit/BarcodeScanner/BarcodeScanner";
+import BarcodeScanner from "../ui-kit/BarcodeScanner/BarcodeScanner";
 import styles from "./Warranty.module.css";
+import { toast } from "react-toastify";
 const Warranty = () => {
     const [cardNumber, setCardNumber] = useState("");
+    const [isUseResultBarcode, setIsUseResultBarcode] = useState(false);
     const queryClient = useQueryClient();
     const { data, isSuccess, isError, isFetching, refetch } = useQuery({
         queryKey: ["warrantyCard"],
@@ -26,6 +24,23 @@ const Warranty = () => {
             refetch();
         }
     };
+    useEffect(() => {
+        if (cardNumber && isUseResultBarcode) {
+            refetch();
+            setIsUseResultBarcode(false);
+        }
+    }, [cardNumber, isUseResultBarcode]);
+
+    const hanldeScanQRSuccess = (barcodeUrl) => {
+        // const apiUrl = `${process.env.REACT_APP_BARCODE_PREFIX_URL}`;
+        const barcodeText = barcodeUrl.split("/").pop();
+        if (barcodeText) {
+            setCardNumber(barcodeText);
+            setIsUseResultBarcode(true);
+        } else {
+            toast.error("Barcode is empty.");
+        }
+    };
     var warrantyInfomation = data?.data?.data;
 
     return (
@@ -33,7 +48,7 @@ const Warranty = () => {
             <div className={clsx(styles.cardContainer)}>
                 <div className={clsx(styles.formContainer)}>
                     <div className={clsx(styles.formTitle)}>
-                    Vui lòng nhập mã số trên thẻ của bạn để kiểm tra thông tin bảo hành:
+                        Vui lòng nhập mã số trên thẻ của bạn để kiểm tra thông tin bảo hành:
                     </div>
                     <OutlinedInput
                         className={clsx(styles.textFieldForm)}
@@ -43,11 +58,11 @@ const Warranty = () => {
                         InputLabelProps={{
                             shrink: false,
                         }}
-                        // endAdornment={
-                        //     <InputAdornment position="end">
-                        //         <BarcodeScannerComponent />
-                        //     </InputAdornment>
-                        // }
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <BarcodeScanner hanldeScanQRSuccess={hanldeScanQRSuccess} />
+                            </InputAdornment>
+                        }
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
                     />
@@ -156,8 +171,8 @@ const Warranty = () => {
                 <div className={clsx(styles.subContent)}>
                     <ul>
                         <li>
-                            Các loại phục hình Zirconia khác nhau do SunnyTA Lab sản xuất, được chế tạo
-                            bằng nguyên liệu nhập khẩu chính hãng có nguồn gốc rõ ràng.
+                            Các loại phục hình Zirconia khác nhau do SunnyTA Lab sản xuất, được chế
+                            tạo bằng nguyên liệu nhập khẩu chính hãng có nguồn gốc rõ ràng.
                         </li>
                         <li>Khuyến nghị tuân thủ theo hướng dẫn của nha sĩ điều trị.</li>
                         <li>

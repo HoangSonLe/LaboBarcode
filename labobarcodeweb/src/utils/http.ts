@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios'
-
+const API_URL = process.env.REACT_APP_API_URL;
 class Http {
   instance: AxiosInstance
   constructor() {
     this.instance = axios.create({
-      baseURL: 'https://localhost:44348/api/v1/',
+      baseURL: API_URL,
       timeout: 10000,
       withCredentials: true, 
       headers: {
