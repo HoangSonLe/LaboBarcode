@@ -32,9 +32,12 @@ const Warranty = () => {
     }, [cardNumber, isUseResultBarcode]);
 
     const hanldeScanQRSuccess = (barcodeUrl) => {
-        // const apiUrl = `${process.env.REACT_APP_BARCODE_PREFIX_URL}`;
-        const barcodeText = barcodeUrl.split("/").pop();
+        // Find the starting index of the remaining substring
+        const apiUrl = `${process.env.REACT_APP_BARCODE_PREFIX_URL}`;
+        const startIndex = barcodeUrl.indexOf(apiUrl) + apiUrl.length;
+        const barcodeText = barcodeUrl.slice(startIndex);
         if (barcodeText) {
+            console.log(barcodeText);
             setCardNumber(barcodeText);
             setIsUseResultBarcode(true);
         } else {

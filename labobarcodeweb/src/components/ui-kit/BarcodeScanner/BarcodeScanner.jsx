@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { Box, Dialog, DialogContent, IconButton } from "@mui/material";
 import {
@@ -7,6 +6,7 @@ import {
     FormatException,
     NotFoundException,
 } from "@zxing/library";
+import { useEffect, useRef, useState } from "react";
 
 export default function BarcodeScanner({ hanldeScanQRSuccess }) {
     const [scanning, setScanning] = useState(false);
@@ -150,7 +150,7 @@ export default function BarcodeScanner({ hanldeScanQRSuccess }) {
                         flexDirection: "column",
                     }}
                 >
-                    <Box>Code: {code}</Box>
+                    {/* <Box>Code: {code}</Box> */}
                     <Box>
                         <video ref={videoRef} id="video" width="300" height="200" />
                     </Box>
