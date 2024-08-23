@@ -1,8 +1,9 @@
+@import "../../globals/global.module.css";
 .headerModal {
-    border-bottom: 6px #148f96 !important;
+    border-bottom: 6px var(--primary-color) !important;
     color: #1d2129 !important;
     background-color: white !important;
 }
 .icon {
-    color: #148f96;
+    color: var(--primary-color);
 }

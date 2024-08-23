@@ -10,7 +10,7 @@
 }
 .cardContainer {
     background: #e7f2f4 0% 0% no-repeat padding-box;
-    color: #148f96;
+    color: var(--primary-color);
     /* border: 1px solid #89C5CA; */
     border-radius: 5px;
     display: flex;

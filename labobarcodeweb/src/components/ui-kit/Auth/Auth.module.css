@@ -1,0 +1,39 @@
+@import "../../globals/global.module.css";
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.button {
+    composes: primaryButton from "../../globals/global.module.css";
+    margin: 0 !important;
+    margin-left: 5px !important;
+    /* background: var(--primary-color) 0% 0% no-repeat padding-box !important; */
+}
+.headerModal {
+    border-bottom: 6px var(--primary-color) !important;
+    color: #1d2129 !important;
+    background-color: white !important;
+}
+.filterContainer{
+    padding: 1rem;
+}
+.errorContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20rem;
+    width: 40rem;
+    background: #bee0e1;
+    box-shadow: 0px 1px 2px #00000029;
+    border: 2px solid var(--primary-color);
+    border-radius: 20px;
+}

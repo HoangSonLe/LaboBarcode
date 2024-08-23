@@ -119,7 +119,7 @@ const FileUploadWithPreview = memo(
                             position: "absolute",
                             right: 8,
                             top: 8,
-                            color: "#148f96",
+                            color: "var(--primary-color)",
                         }}
                     >
                         <CloseIcon fontSize="large" />
