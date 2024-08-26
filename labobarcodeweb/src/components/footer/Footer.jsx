@@ -25,9 +25,9 @@ const Footer = () => {
                         </GoogleMap>
                     </LoadScript>
                 </div>
-                <div className={clsx(styles.bannerLogo)}>
+                {/* <div className={clsx(styles.bannerLogo)}>
                     <img alt="Banner" src={BannerLogo} />
-                </div>
+                </div> */}
                 <div className={clsx(styles.contactContainer)}>
                     <div className={clsx(styles.contactItem)}>
                         <div className={clsx(styles.contactIcon)}>
@@ -52,6 +52,8 @@ const Footer = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className={clsx(styles.contactContainer)}>
                     <div className={clsx(styles.contactItem)}>
                         <div className={clsx(styles.contactIcon)}>
                             <IoMail fon={"12px"} />
