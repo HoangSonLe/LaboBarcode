@@ -18,7 +18,7 @@ export const createWarranty = (data) =>
 export const updateWarranty = (warrantyId, data) => {
     console.log(JSON.stringify(data));
 
-    return http.put(`/warranty/update/${warrantyId}`, data, {
+    return http.post(`/warranty/update/${warrantyId}`, data, {
         headers: {
             "Content-Type": "multipart/form-data", // Override Content-Type for this request
         },
