@@ -128,8 +128,8 @@ const headCells = [
 export default function WarrantyTable({ tableData }) {
     const defaultSearch = {
         searchString: "",
-        expiredFromDate: moment(new Date(), "DD-MM-YYYY").add(-7, "days"),
-        expiredToDate: moment(new Date(), "DD-MM-YYYY").add(7, "days"),
+        expiredFromDate: moment(new Date(), "DD-MM-YYYY").add(-30, "days"),
+        expiredToDate: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
         expiredStatus: undefined,
     };
     const [order, setOrder] = useState("asc");
