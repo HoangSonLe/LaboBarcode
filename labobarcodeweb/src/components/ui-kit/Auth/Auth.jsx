@@ -52,7 +52,7 @@ const AuthCode = ({ onAuthenticate }) => {
                         <TextField
                             label="Security Code"
                             sx={{
-                                width: "20rem",
+                                marginBottom: "5px !important"
                             }}
                             size="small"
                             value={code}
