@@ -125,7 +125,7 @@ const headCells = [
     },
 ];
 
-export default function WarrantyTable({ tableData }) {
+export default function WarrantyTable() {
     const defaultSearch = {
         searchString: "",
         expiredFromDate: moment(new Date(), "DD-MM-YYYY").add(-30, "days"),
@@ -162,13 +162,13 @@ export default function WarrantyTable({ tableData }) {
     const [searchCardNumberModalProps, setModalProps] = useState(false);
     const searchCardNumberModalRef = useRef();
     const openSearchCardModal = () => {
-        setModalProps(true);
+        // setModalProps(true);
         setTimeout(() => {
             searchCardNumberModalRef.current.onOpenModal();
         }, 0); // Ensure modal is rendered before calling openModal
     };
     const handleCloseSearchCardModal = () => {
-        setModalProps(null); // Unmount the modal after closing
+        // setModalProps(null); // Unmount the modal after closing
     };
     //#endregion
     //#region API
@@ -185,8 +185,8 @@ export default function WarrantyTable({ tableData }) {
                 {
                     searchModel: {
                         searchString: searchModel.searchString,
-                        fromDate: searchModel.expiredFromDate,
-                        toDate: searchModel.expiredToDate,
+                        fromDate: searchModel.expiredFromDate ? moment(searchModel.expiredFromDate, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
+                        toDate: searchModel.expiredToDate ? moment(searchModel.expiredToDate, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
                     },
                     sort: orderBy,
                     sortDirection: order,
@@ -217,8 +217,8 @@ export default function WarrantyTable({ tableData }) {
                         {
                             searchModel: {
                                 searchString: searchModel.searchString,
-                                fromDate: searchModel.expiredFromDate,
-                                toDate: searchModel.expiredToDate,
+                                fromDate: searchModel.expiredFromDate ? moment(searchModel.expiredFromDate, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
+                                toDate: searchModel.expiredToDate ? moment(searchModel.expiredToDate, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
                             },
                             sort: orderBy,
                             sortDirection: order,
@@ -315,9 +315,6 @@ export default function WarrantyTable({ tableData }) {
     let currentTotal = !data ? 0 : data.data.data.length;
     let numSelected = selected?.length;
     const emptyRows = page > 0 ? Math.max(0, Math.abs(rowsPerPage - data?.data?.data.length)) : 0;
-    // console.log(currentTotal);
-    console.log(emptyRows, page);
-    console.log(data?.data?.total, rowsPerPage, (1 + page) * rowsPerPage - data?.data?.total, page);
     return (
         <Box
             sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -349,7 +346,7 @@ export default function WarrantyTable({ tableData }) {
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
                                 label="From Date"
-                                value={searchModel.expiredFromDate}
+                                value={searchModel.expiredFromDate ? moment(searchModel.expiredFromDate, 'DD/MM/YYYY') : null}
                                 onChange={(value) =>
                                     setSearchModel((prev) => ({
                                         ...prev,
@@ -367,7 +364,7 @@ export default function WarrantyTable({ tableData }) {
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DatePicker
                                 label="To Date"
-                                value={searchModel.expiredToDate}
+                                value={searchModel.expiredToDate ? moment(searchModel.expiredToDate, 'DD/MM/YYYY') : null}
                                 onChange={(value) =>
                                     setSearchModel((prev) => ({
                                         ...prev,
@@ -432,13 +429,10 @@ export default function WarrantyTable({ tableData }) {
                             Check warranty code
                         </Button>
                     </Stack>
-                    {searchCardNumberModalProps && (
-                        <ResearchWarrantyModal
+                    <ResearchWarrantyModal
                             ref={searchCardNumberModalRef}
-                            id={searchCardNumberModalProps.id}
                             onClose={handleCloseSearchCardModal}
                         />
-                    )}
                 </div>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">

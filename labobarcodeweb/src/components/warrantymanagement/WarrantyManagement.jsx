@@ -2,7 +2,7 @@ import clsx from "clsx";
 import styles from "./WarrantyManagement.module.css";
 
 import WarrantyTable from "./WarrantyTable";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import AuthCode from "../ui-kit/Auth/Auth";
 import moment from "moment";
 const WarrantyManagement = () => {
@@ -11,7 +11,7 @@ const WarrantyManagement = () => {
     const handleAuthentication = (status) => {
         setIsAuthenticated(status);
     };
-    useEffect(() => {
+    useLayoutEffect(() => {
         const authLaboExpiredDate = localStorage.getItem("authLaboExpiredDate");
         if (authLaboExpiredDate) {
             const storedDate = moment(authLaboExpiredDate);
