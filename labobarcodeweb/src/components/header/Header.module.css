@@ -4,8 +4,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: transparent linear-gradient(90deg, #5fc4cb 0%, #78a4a7 100%) 0% 0% no-repeat
-        padding-box;
+    background: #a0e1a9;
+    /* background: transparent linear-gradient(270deg, #13d470 0%, #147c46 100%) 0% 0% no-repeat padding-box; */
+    /* background: transparent linear-gradient(90deg, #5fc4cb 0%, #78a4a7 100%) 0% 0% no-repeat
+        padding-box; */
     box-shadow: 0px 2px 5px #00000029;
     position: sticky;
     top: 0;

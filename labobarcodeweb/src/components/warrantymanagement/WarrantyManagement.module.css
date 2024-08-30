@@ -21,7 +21,7 @@
 .tableHead th {
     font-weight: bold !important;
     color: white !important;
-    background: #178091 0% 0% no-repeat padding-box !important;
+    background: var(--background--table) 0% 0% no-repeat padding-box !important;
     text-align: center !important;
 }
 .button {

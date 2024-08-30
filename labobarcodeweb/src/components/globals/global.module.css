@@ -7,10 +7,10 @@
 }
 .primaryButton {
     composes: buttonBase;
+    /* color: black !important; */
     background: var(--primary-color) 0% 0% no-repeat padding-box !important;
     &:hover {
         background: var(--dark-primary-color) 0% 0% no-repeat padding-box !important;
-        color: white;
     }
 }
 .secondaryButton {
@@ -23,13 +23,14 @@
 }
 .primaryOutlinedButton {
     composes: buttonBase;
+    font-weight: bold;
     background: var(--white-color) 0% 0% no-repeat padding-box !important;
     color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     &:hover {
         background: var(--dark-white-color) 0% 0% no-repeat padding-box !important;
         color: var(--primary-color) !important;
-        border-color: var(--dark-primary-color-primary-color) !important;
+        border-color: var(--dark-primary-color) !important;
         cursor: pointer;
     }
 }

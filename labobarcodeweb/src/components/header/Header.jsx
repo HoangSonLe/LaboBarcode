@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import React, { useState } from "react";
-import styles from "./Header.module.css";
-import Menu from "../menu/Menu";
 import logo from "../../assets/images/logo1.png";
+import Menu from "../menu/Menu";
+import styles from "./Header.module.css";
+import { Typography } from "@mui/material";
 const Header = () => {
     const menuData = [
         {
@@ -44,17 +44,17 @@ const Header = () => {
     return (
         <div className={clsx(styles.nav)}>
             <div className={clsx(styles.logo)}>
-            <img 
-  alt="Logo" 
-  src={logo} 
-  style={{ 
-    width: '150px', 
-    height: 'auto', 
-    filter: 'brightness(1.2) contrast(1.2)' ,
-    marginTop: '-15px'
-  }} 
-/>
-
+                {/* <img
+                    alt="Logo"
+                    src={logo}
+                    style={{
+                        width: "150px",
+                        height: "auto",
+                        filter: "brightness(1.2) contrast(1.2)",
+                        marginTop: "-15px",
+                    }}
+                /> */}
+                <Typography fontFamily={"open sans-serif"} color="black" variant="h4">SunnyTa</Typography>
             </div>
             <div className={clsx(styles.menu)}>
                 <Menu menuData={menuData} />

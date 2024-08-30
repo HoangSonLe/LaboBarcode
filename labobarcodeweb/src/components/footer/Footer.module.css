@@ -53,7 +53,7 @@
 .contactIcon {
     width: 2.5rem;
     height: 2.5rem;
-    background-color: #89c5ca;
+    background-color: var(--background--icon);
     border-radius: 50%;
     color: white;
     display: flex;
