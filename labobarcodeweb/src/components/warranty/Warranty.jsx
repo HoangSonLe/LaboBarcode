@@ -11,7 +11,6 @@ import styles from "./Warranty.module.css";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 const Warranty = () => {
-
     const { id } = useParams();
 
     const [cardNumber, setCardNumber] = useState(id);
@@ -165,16 +164,18 @@ const Warranty = () => {
                         <li>Sản phẩm vẫn còn trong thời gian bảo hành.</li>
                     </ul>
                 </div>
-                <div className={clsx(styles.subtitle)}>Các Điều Kiện Không Được Bảo Hành:</div>
+                <div className={clsx(styles.subtitle)}>ĐIỀU KIỆN KHÔNG BẢO HÀNH:</div>
                 <div className={clsx(styles.subContent)}>
                     <ul>
+                        <li>Thẻ bảo hành hết hạn, bị tẩy xoá không còn nguyên vẹn.</li>
+                        <li>Các thông tin trên thẻ, trên phần mềm không trùng khớp.</li>
                         <li>
-                            Phục hình bị vỡ do rơi, va chạm trước khi lắp đặt, bị nứt do rơi, hoặc
-                            chấn thương.
+                            Phục hình bị gãy, vỡ do rơi, ngoại lực tác động, cố ý nhai, căn vật cứng
+                            hoặc khách hàng muốn thay đổi màu sắc hình thể.
                         </li>
                     </ul>
                 </div>
-                <div className={clsx(styles.subtitle)}>Chi Tiết:</div>
+                <div className={clsx(styles.subtitle)}>CHI TIẾT:</div>
                 <div className={clsx(styles.subContent)}>
                     <ul>
                         <li>
