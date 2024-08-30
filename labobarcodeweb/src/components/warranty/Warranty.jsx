@@ -9,14 +9,18 @@ import { getWarrantyByCode } from "../../apis/warranty.api";
 import BarcodeScanner from "../ui-kit/BarcodeScanner/BarcodeScanner";
 import styles from "./Warranty.module.css";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 const Warranty = () => {
-    const [cardNumber, setCardNumber] = useState("");
+
+    const { id } = useParams();
+
+    const [cardNumber, setCardNumber] = useState(id);
     const [isUseResultBarcode, setIsUseResultBarcode] = useState(false);
     const queryClient = useQueryClient();
     const { data, isSuccess, isError, isFetching, refetch } = useQuery({
         queryKey: ["warrantyCard"],
         queryFn: () => getWarrantyByCode(cardNumber),
-        enabled: false,
+        enabled: !!cardNumber,
         staleTime: 0,
     });
     const handleSubmit = () => {

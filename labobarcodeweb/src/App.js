@@ -21,7 +21,7 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <Routes>
                     <Route path="/" element={<Layout />}>
-                        <Route index element={<Warranty />} />
+                        <Route path="/:id?" index element={<Warranty />} />
                         <Route path="/quanlythebaohanh" element={<WarrantyManagement />} />
                         {/* <Route path="contact" element={<Contact />} /> */}
                         <Route path="*" element={<ErrorPage />} />
