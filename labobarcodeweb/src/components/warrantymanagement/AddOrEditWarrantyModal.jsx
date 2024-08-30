@@ -38,7 +38,8 @@ const AddOrEditWarrantyModal = React.forwardRef(({ id = "", onClose }, ref) => {
         queryKey: ["warranty", id],
         queryFn: () => getWarranty(id),
         enabled: !!id,
-        staleTime: 1000 * 10,
+        staleTime: 0
+        // staleTime: 1000 * 10,
     });
 
     const createOrEditWarrantyMutation = useMutation({
