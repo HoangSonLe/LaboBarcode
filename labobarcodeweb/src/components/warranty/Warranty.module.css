@@ -126,6 +126,7 @@
     font-weight: 600;
     color: var(--font-color);
     text-decoration: underline;
+    text-transform: uppercase;
 }
 .subContent {
     font-size: 1rem;
