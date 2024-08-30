@@ -54,7 +54,7 @@ const Header = () => {
                         marginTop: "-15px",
                     }}
                 /> */}
-                <Typography fontFamily={"open sans-serif"} color="black" variant="h4">SunnyTa</Typography>
+                <Typography fontWeight={"bold"} fontFamily={"open sans-serif"} color="black" variant="h4">SunnyTa</Typography>
             </div>
             <div className={clsx(styles.menu)}>
                 <Menu menuData={menuData} />
