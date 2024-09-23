@@ -129,7 +129,7 @@ export default function WarrantyTable() {
     const defaultSearch = {
         searchString: "",
         expiredFromDate: moment(new Date(), "DD-MM-YYYY").add(-30, "days"),
-        expiredToDate: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
+        expiredToDate: moment(new Date("2099-01-01"), "YYYY-MM-DD").add(30, "days"),
         expiredStatus: undefined,
     };
     const [order, setOrder] = useState("asc");
